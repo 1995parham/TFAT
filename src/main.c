@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 10 Dec 2014 12:44:45 AM IRST
+// * Last Modified : Wed 10 Dec 2014 11:35:51 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -17,6 +17,8 @@
 int main(int argc, char* argv[]){
 	int fd = open("/dev/loop0", O_RDONLY); 
 	
+	// Cluster 0, sector 0
+
 	fat_BS_t fat;
 	read(fd, &fat, 512);
 	printf("Boot Jump: %2X %2X %2X\n", fat.bootjmp[0], fat.bootjmp[1], fat.bootjmp[2]);
@@ -31,10 +33,10 @@ int main(int argc, char* argv[]){
 
 	fat_addr_t root_cluster = first_data_sector(&fat);
 
-	printf("Root Cluster: %hu\n", root_cluster);
+	printf("Root Cluster Sector: %hu\n", root_cluster);
 	
-	fat_addr_t fat_sector = first_fat_sector(&fat);
-	lseek(fd, fat_sector * 512, SEEK_SET);
+	// Cluster 0, Sector 1
+
 	fat_addr_t fat_table[256 * fat.table_size_16];
 	read(fd, &fat_table, 512 * fat.table_size_16);
 	int i;
@@ -45,6 +47,8 @@ int main(int argc, char* argv[]){
 	for(i = 0; i < 256 * fat.table_size_16; i++){
 		printf("%d : %04X\n", i, fat_table[i]);
 	}
+
+	// Cluster 0, sector 3
 
 	close(fd);
 
