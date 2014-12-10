@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 10 Dec 2014 12:51:42 AM IRST
+// * Last Modified : Wed 10 Dec 2014 06:15:53 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -60,15 +60,23 @@ typedef struct{
 	uint32_t	file_size;
 }__attribute__((packed)) fat_dir_layout_t;
 
+extern fat_BS_t fat_boot;
+extern fat_addr_t *fat_table;
+extern fat_addr_t *fat_table_bak;
+
+// Buid and initiate fat, fat_table, root_dir
+void init_fat(int fd);
+// Find next cluster from fat table
+fat_addr_t next_cluster(fat_addr_t index);
 // The first in the File Allocation Table
-fat_addr_t first_fat_sector(const fat_BS_t* fat_boot);
+fat_addr_t first_fat_sector();
 // The size of the root directory
-fat_addr_t root_dir_sectors(const fat_BS_t* fat_boot);
+fat_addr_t root_dir_sectors();
 // The first data sector (that is, the first sector in which directories and files may be stored)
-fat_addr_t first_data_sector(const fat_BS_t* fat_boot);
+fat_addr_t first_data_sector();
 // The total number of data sectors
-fat_addr_t data_sectors(const fat_BS_t* fat_boot);
+fat_addr_t data_sectors();
 // The total number of clusters
-fat_addr_t total_clusters(const fat_BS_t* fat_boot);
+fat_addr_t total_clusters();
 
 #endif
