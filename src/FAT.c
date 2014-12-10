@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 10 Dec 2014 06:23:26 PM IRST
+// * Last Modified : Wed 10 Dec 2014 11:38:57 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -24,7 +24,7 @@ void init_fat(int fd){
 
 	fat_table = (fat_addr_t*)malloc(sizeof(fat_addr_t) * 256 * fat_boot.table_size_16);
 	read(fd, fat_table, 512 * fat_boot.table_size_16);
-	
+
 	fat_table_bak = (fat_addr_t*)malloc(sizeof(fat_addr_t) * 256 * fat_boot.table_size_16);
 	read(fd, fat_table_bak, 512 * fat_boot.table_size_16);
 

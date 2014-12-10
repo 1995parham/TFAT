@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 10 Dec 2014 06:53:40 PM IRST
+// * Last Modified : Thu 11 Dec 2014 12:21:48 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -22,6 +22,7 @@ int main(int argc, char* argv[]){
 	printf("Boot Jump: %2X %2X %2X\n", fat_boot.bootjmp[0], fat_boot.bootjmp[1], fat_boot.bootjmp[2]);
 	printf("OEM Media: %8s\n", fat_boot.oem_name);
 	printf("Media Type: %2X\n", fat_boot.media_type);
+	printf("Bytes Per Sector: %hu\n", fat_boot.bytes_per_sector);
 	printf("Sectors Per Track: %hu\n", fat_boot.sectors_per_track);
 	printf("Sectors Per Cluster: %hu\n", fat_boot.sectors_per_cluster);
 	printf("Root Entry Count: %hu\n", fat_boot.root_entry_count);
@@ -32,11 +33,12 @@ int main(int argc, char* argv[]){
 	fat_addr_t root_cluster = first_data_sector();
 
 	printf("Root Cluster Sector: %hu\n", root_cluster);
-		
+
 	//Now you are at the start of root directory structure
 	int i = 0;
 	fat_dir_layout_t root_dir[512]; 
 	read(fd, &root_dir, 512 * 32);
+	int sk = lseek(fd, 0, SEEK_CUR);
 	for(i = 0; i < 512; i++){
 		int j = 0;
 		for(j = 0; j < 8; j++){
@@ -51,10 +53,12 @@ int main(int argc, char* argv[]){
 			fputc(root_dir[i].extention[j], stdout);
 		}	
 		fputc('\n', stdout);
+		printf("%X\n", root_dir[i].attr);
 		fat_addr_t cluster = root_dir[i].first_cluster;
 		while(cluster){
-			char buff[512 * fat_boot.sectors_per_cluster];
-			lseek(fd, 512 * fat_boot.sectors_per_cluster * cluster, SEEK_SET);
+			uint8_t buff[512 * fat_boot.sectors_per_cluster];
+			int ret = lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster -2) + sk, SEEK_SET);
+			printf("%d\n", ret);
 			read(fd, buff, 512 * fat_boot.sectors_per_cluster);
 			printf("%hu\n", cluster);
 			int j = 0;
