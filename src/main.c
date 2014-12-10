@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 10 Dec 2014 11:35:51 AM IRST
+// * Last Modified : Wed 10 Dec 2014 12:58:18 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -35,8 +35,6 @@ int main(int argc, char* argv[]){
 
 	printf("Root Cluster Sector: %hu\n", root_cluster);
 	
-	// Cluster 0, Sector 1
-
 	fat_addr_t fat_table[256 * fat.table_size_16];
 	read(fd, &fat_table, 512 * fat.table_size_16);
 	int i;
@@ -48,7 +46,12 @@ int main(int argc, char* argv[]){
 		printf("%d : %04X\n", i, fat_table[i]);
 	}
 
-	// Cluster 0, sector 3
+	//Now you are at the start of root directory structure
+
+	fat_dir_layout_t root_dir[512]; 
+	read(fd, &root_dir, 512 * 32);
+	for(i = 0; i < 512; i++)
+		printf("%c%c%c%c%c\n", root_dir[i].name[0], root_dir[i].name[1], root_dir[i].name[2], root_dir[i].name[3], root_dir[i].name[4]);
 
 	close(fd);
 
