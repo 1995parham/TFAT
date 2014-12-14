@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Thu 11 Dec 2014 12:21:48 AM IRST
+// * Last Modified : Sun 14 Dec 2014 10:25:51 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]){
 		fat_addr_t cluster = root_dir[i].first_cluster;
 		while(cluster){
 			uint8_t buff[512 * fat_boot.sectors_per_cluster];
-			int ret = lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster -2) + sk, SEEK_SET);
+			int ret = lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + sk, SEEK_SET);
 			printf("%d\n", ret);
 			read(fd, buff, 512 * fat_boot.sectors_per_cluster);
 			printf("%hu\n", cluster);
