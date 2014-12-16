@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Tue 16 Dec 2014 11:29:05 PM IRST
+// * Last Modified : Wed 17 Dec 2014 12:06:26 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -70,9 +70,10 @@ int main(int argc, char* argv[]){
 			//		printf("%c", buff[j]);
 			//	cluster = next_cluster(cluster);
 			//}
-			printf("\nCreate Time %hx\n", root_dir[i].create_time);
-			printf("First Cluster: %hu\n", root_dir[i].first_cluster);
+			printf("\nFirst Cluster: %hu\n", root_dir[i].first_cluster);
 			printf("File Size: %u\n", root_dir[i].file_size);
+			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
+			printf("Create Time: %s\n", asctime(&file_tm));
 			printf("------------------------------------------------\n");
 		}
 	}

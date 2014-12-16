@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Tue 16 Dec 2014 11:08:06 PM IRST
+// * Last Modified : Tue 16 Dec 2014 11:47:47 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -82,6 +82,6 @@ fat_addr_t total_clusters();
 // Is directory
 int is_directory(uint8_t attr);
 // Get create timestamp
-time_t create_time(uint16_t create_time, uint16_t create_date);
+struct tm create_time(uint16_t create_time, uint16_t create_date);
 
 #endif

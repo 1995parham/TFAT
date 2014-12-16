@@ -4,12 +4,13 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Tue 16 Dec 2014 11:36:41 PM IRST
+// * Last Modified : Wed 17 Dec 2014 12:04:28 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
 #include "FAT.h"
 
+#include <time.h>
 #include <malloc.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -57,7 +58,13 @@ fat_addr_t total_clusters(){
 int is_directory(uint8_t attr){
 	return attr & 0x10;
 }
-time_t create_time(uint16_t create_time, uint16_t create_date){
-		
+struct tm create_time(uint16_t create_time, uint16_t create_date){
+	struct tm file_tm;
+	file_tm.tm_year = ((create_date & (0b1111111000000000)) >> 9) + 80;
+	file_tm.tm_mon  = ((create_date & (0b0000000111100000)) >> 5) - 1;
+	file_tm.tm_mday =  (create_date & (0b0000000000011111));
+	file_tm.tm_hour = (create_time & (0b1111100000000000)) >> 11;
+	file_tm.tm_min  = (create_time & (0b0000011111100000)) >> 5;
+	file_tm.tm_sec  = (create_time & (0b0000000000011111)) * 2;
+	return file_tm;
 }
-
