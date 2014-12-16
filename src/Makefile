@@ -7,7 +7,7 @@ FAT: $(OBJ)
 	gcc $(CFLAGS) -o FAT.out $(OBJ) $(SLIB) $(LIB)
 main.o: main.c command.h
 	gcc $(CFLAGS) -c main.c
-user.o: user.c user.h FAT.h
+user.o: user.c user.h FAT.h common.h
 	gcc $(CFLAGS) -c user.c
 common.o: common.h common.c
 	gcc $(CFLAGS) -c common.c

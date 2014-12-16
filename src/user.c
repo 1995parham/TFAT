@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 17 Dec 2014 01:31:44 AM IRST
+// * Last Modified : Wed 17 Dec 2014 02:24:17 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -13,12 +13,16 @@
 #include <fcntl.h>
 
 #include "FAT.h"
+#include "common.h"
 #include "user.h"
 
 static int fd;
 
 void mount(const char* dev){
 	fd = open(dev, O_RDONLY); 
+	
+	if(fd <= 0)
+		die("cannot open %s", dev);
 
 	init_fat(fd);
 	
@@ -40,6 +44,9 @@ void mount(const char* dev){
 
 
 void ls(const char* dir){
+	if(fd == 0)
+		die("Please open valid device first");
+
 	int i = 0;
 	for(i = 0; i < 512; i++){
 		if(!is_directory(root_dir[i].attr) && root_dir[i].file_size){
