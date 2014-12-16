@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 17 Dec 2014 12:06:26 AM IRST
+// * Last Modified : Wed 17 Dec 2014 12:42:30 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -37,27 +37,29 @@ int main(int argc, char* argv[]){
 
 	// Now you are at the start of root directory structure
 	int i = 0;
-	fat_dir_layout_t root_dir[512]; 
-	read(fd, &root_dir, 512 * 32);
-	//int sk = lseek(fd, 0, SEEK_CUR);
 	for(i = 0; i < 512; i++){
 		if(!is_directory(root_dir[i].attr) && root_dir[i].file_size){
+			char dis_name[255];
+			char dis_time[255];
 			int j = 0;
-			// Print file name
+			int index = 0;
+			// Store file name
+			dis_name[index] = 0;
 			for(j = 0; j < 8; j++){
 				if(root_dir[i].name[j] == 0 || root_dir[i].name[j] == ' ' || root_dir[i].name[j] == 0xE5)
 					break;
-				fputc(root_dir[i].name[j], stdout);
+				dis_name[index] = root_dir[i].name[j];
+				index++;
 			}
-			fputc('.', stdout);
-			// Print file extention
+			dis_name[index] = '.';
+			index++;
 			for(j = 0; j < 3; j++){
 				if(root_dir[i].extention[j] == 0 || root_dir[i].name[j] == ' ')
 					break;
-				fputc(root_dir[i].extention[j], stdout);
+				dis_name[index] = root_dir[i].extention[j];
+				index++;
 			}	
-			fputc('\t', stdout);
-
+			dis_name[index] = 0;	
 			//fat_addr_t cluster = root_dir[i].first_cluster;
 			//while(cluster){
 			//	uint8_t buff[512 * fat_boot.sectors_per_cluster];
@@ -70,11 +72,9 @@ int main(int argc, char* argv[]){
 			//		printf("%c", buff[j]);
 			//	cluster = next_cluster(cluster);
 			//}
-			printf("\nFirst Cluster: %hu\n", root_dir[i].first_cluster);
-			printf("File Size: %u\n", root_dir[i].file_size);
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
-			printf("Create Time: %s\n", asctime(&file_tm));
-			printf("------------------------------------------------\n");
+			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
+			printf("%s %4u %s\n", dis_time, root_dir[i].file_size, dis_name);
 		}
 	}
 	

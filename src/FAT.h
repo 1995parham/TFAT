@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Tue 16 Dec 2014 11:47:47 PM IRST
+// * Last Modified : Wed 17 Dec 2014 12:18:31 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -13,6 +13,7 @@
 
 #include <time.h>
 #include <stdint.h>
+#include <sys/types.h>
 
 typedef struct{
 	uint8_t 	bios_drive_num;
@@ -64,6 +65,8 @@ typedef struct{
 extern fat_BS_t fat_boot;
 extern fat_addr_t *fat_table;
 extern fat_addr_t *fat_table_bak;
+extern fat_dir_layout_t *root_dir;
+extern off_t data_offset;
 
 // Buid and initiate fat, fat_table, root_dir
 void init_fat(int fd);

@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 17 Dec 2014 12:04:28 AM IRST
+// * Last Modified : Wed 17 Dec 2014 12:21:04 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -19,6 +19,8 @@
 fat_BS_t fat_boot;
 fat_addr_t* fat_table;
 fat_addr_t* fat_table_bak;
+fat_dir_layout_t* root_dir;
+off_t data_offset;
 
 void init_fat(int fd){
 	read(fd, &fat_boot, 512);
@@ -28,7 +30,11 @@ void init_fat(int fd){
 
 	fat_table_bak = (fat_addr_t*)malloc(sizeof(fat_addr_t) * 256 * fat_boot.table_size_16);
 	read(fd, fat_table_bak, 512 * fat_boot.table_size_16);
+	
+	root_dir = (fat_dir_layout_t*)malloc(sizeof(fat_dir_layout_t) * fat_boot.root_entry_count);
+	read(fd, root_dir, fat_boot.root_entry_count * 32);
 
+	data_offset = lseek(fd, 0, SEEK_CUR);
 }
 
 fat_addr_t next_cluster(fat_addr_t index){
