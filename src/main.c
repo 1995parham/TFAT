@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Sun 14 Dec 2014 10:25:51 AM IRST
+// * Last Modified : Tue 16 Dec 2014 11:29:05 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -16,9 +16,10 @@
 
 int main(int argc, char* argv[]){
 	int fd = open("/dev/loop0", O_RDONLY); 
-	
+
 	// Cluster 0, sector 0
 	init_fat(fd);
+	
 	printf("Boot Jump: %2X %2X %2X\n", fat_boot.bootjmp[0], fat_boot.bootjmp[1], fat_boot.bootjmp[2]);
 	printf("OEM Media: %8s\n", fat_boot.oem_name);
 	printf("Media Type: %2X\n", fat_boot.media_type);
@@ -34,40 +35,46 @@ int main(int argc, char* argv[]){
 
 	printf("Root Cluster Sector: %hu\n", root_cluster);
 
-	//Now you are at the start of root directory structure
+	// Now you are at the start of root directory structure
 	int i = 0;
 	fat_dir_layout_t root_dir[512]; 
 	read(fd, &root_dir, 512 * 32);
-	int sk = lseek(fd, 0, SEEK_CUR);
+	//int sk = lseek(fd, 0, SEEK_CUR);
 	for(i = 0; i < 512; i++){
-		int j = 0;
-		for(j = 0; j < 8; j++){
-			if(root_dir[i].name[j] == 0)
-				break;
-			fputc(root_dir[i].name[j], stdout);
-		}
-		fputc('.', stdout);
-		for(j = 0; j < 3; j++){
-			if(root_dir[i].extention[j] == 0)
-				break;
-			fputc(root_dir[i].extention[j], stdout);
-		}	
-		fputc('\n', stdout);
-		printf("%X\n", root_dir[i].attr);
-		fat_addr_t cluster = root_dir[i].first_cluster;
-		while(cluster){
-			uint8_t buff[512 * fat_boot.sectors_per_cluster];
-			int ret = lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + sk, SEEK_SET);
-			printf("%d\n", ret);
-			read(fd, buff, 512 * fat_boot.sectors_per_cluster);
-			printf("%hu\n", cluster);
+		if(!is_directory(root_dir[i].attr) && root_dir[i].file_size){
 			int j = 0;
-			for(j = 0; j < 512 * fat_boot.sectors_per_cluster; j++)
-				printf("%c", buff[j]);
-			cluster = next_cluster(cluster);
+			// Print file name
+			for(j = 0; j < 8; j++){
+				if(root_dir[i].name[j] == 0 || root_dir[i].name[j] == ' ' || root_dir[i].name[j] == 0xE5)
+					break;
+				fputc(root_dir[i].name[j], stdout);
+			}
+			fputc('.', stdout);
+			// Print file extention
+			for(j = 0; j < 3; j++){
+				if(root_dir[i].extention[j] == 0 || root_dir[i].name[j] == ' ')
+					break;
+				fputc(root_dir[i].extention[j], stdout);
+			}	
+			fputc('\t', stdout);
+
+			//fat_addr_t cluster = root_dir[i].first_cluster;
+			//while(cluster){
+			//	uint8_t buff[512 * fat_boot.sectors_per_cluster];
+			//	int ret = lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + sk, SEEK_SET);
+			//	printf("%d\n", ret);
+			//	read(fd, buff, 512 * fat_boot.sectors_per_cluster);
+			//	printf("%hu\n", cluster);
+			//	int j = 0;
+			//	for(j = 0; j < 512 * fat_boot.sectors_per_cluster; j++)
+			//		printf("%c", buff[j]);
+			//	cluster = next_cluster(cluster);
+			//}
+			printf("\nCreate Time %hx\n", root_dir[i].create_time);
+			printf("First Cluster: %hu\n", root_dir[i].first_cluster);
+			printf("File Size: %u\n", root_dir[i].file_size);
+			printf("------------------------------------------------\n");
 		}
-		printf("First Cluster: %hu\n", root_dir[i].first_cluster);
-		printf("File Size: %u\n", root_dir[i].file_size);
 	}
 	
 	close(fd);

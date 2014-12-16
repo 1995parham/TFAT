@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 10 Dec 2014 11:38:57 PM IRST
+// * Last Modified : Tue 16 Dec 2014 11:36:41 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -53,3 +53,11 @@ fat_addr_t data_sectors(){
 fat_addr_t total_clusters(){
 	return (data_sectors(fat_boot) / fat_boot.sectors_per_cluster);
 }
+
+int is_directory(uint8_t attr){
+	return attr & 0x10;
+}
+time_t create_time(uint16_t create_time, uint16_t create_date){
+		
+}
+

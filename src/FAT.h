@@ -4,13 +4,14 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 10 Dec 2014 06:15:53 PM IRST
+// * Last Modified : Tue 16 Dec 2014 11:08:06 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
 #ifndef FAT_H
 #define FAT_H
 
+#include <time.h>
 #include <stdint.h>
 
 typedef struct{
@@ -78,5 +79,9 @@ fat_addr_t first_data_sector();
 fat_addr_t data_sectors();
 // The total number of clusters
 fat_addr_t total_clusters();
+// Is directory
+int is_directory(uint8_t attr);
+// Get create timestamp
+time_t create_time(uint16_t create_time, uint16_t create_date);
 
 #endif
