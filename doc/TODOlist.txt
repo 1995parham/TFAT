@@ -1,3 +1,5 @@
-1) Adding BFS for searching directory tree.
-2) Adding path parser
-3) Adding cat command
+[Priority] id) message @ filename
+
+[0] 1) Adding BFS for searching directory tree.
+[1] 2) Adding path parser.
+[2] 3) Adding cat command.
