@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 06-12-2014
 //
-// * Last Modified : Wed 17 Dec 2014 02:01:47 AM IRST
+// * Last Modified : Thu 18 Dec 2014 01:01:29 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <readline/readline.h>
+#include <readline/history.h>
 
 #include "command.h"
 
@@ -26,6 +27,10 @@ int main(int argc, char* argv[]){
 	char* command;
 	while(true){
 		command = readline("TFAT>");
+		if(command && *command){
+			add_history(command);
+		}
 		command_dispatcher(command);
+		free(command);
 	}
 }
