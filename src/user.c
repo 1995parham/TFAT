@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 17 Dec 2014 02:24:17 AM IRST
+// * Last Modified : Fri 19 Dec 2014 01:27:41 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -49,7 +49,7 @@ void ls(const char* dir){
 
 	int i = 0;
 	for(i = 0; i < 512; i++){
-		if(!is_directory(root_dir[i].attr) && root_dir[i].file_size){
+		if(!is_directory(root_dir[i].attr) && root_dir[i].file_size && !is_special(root_dir[i].attr)){
 			char dis_name[255];
 			char dis_time[255];
 			int j = 0;
@@ -87,11 +87,35 @@ void ls(const char* dir){
 			//}
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
-			printf("%s %4u %s\n", dis_time, root_dir[i].file_size, dis_name);
+			printf("%s %4u %12s %hu\n", dis_time, root_dir[i].file_size, dis_name, root_dir[i].first_cluster);
+		}else if(is_directory(root_dir[i].attr) && root_dir[i].file_size){
 		}
 	}
 }
-	
+
+void chain(fat_addr_t cluster){
+	if(fd == 0)
+		die("Please open valid device first");
+
+	while(cluster){
+		if(next_cluster(cluster) != 0)
+			printf("%hu -> ", cluster);
+		else
+			printf("%hu\n", cluster);
+		cluster = next_cluster(cluster);
+	}
+}
+
+void fat(){
+	if(fd == 0)
+		die("Please open valid device first");
+
+	fat_addr_t i = 0;
+	for(i = 0; i < fat_boot.table_size_16; i++)
+		printf("%hX <--> %hX\n", i, fat_table[i]); 
+}
+
 void umount(){
-	close(fd);
+	if(fd > 0)
+		close(fd);
 }

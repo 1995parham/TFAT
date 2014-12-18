@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 17 Dec 2014 12:21:04 AM IRST
+// * Last Modified : Fri 19 Dec 2014 01:30:33 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -38,9 +38,7 @@ void init_fat(int fd){
 }
 
 fat_addr_t next_cluster(fat_addr_t index){
-	if(fat_table[index] && 0xF000 == 0xF000)
-		return 0x0000;
-	if(fat_table[index] == 0x0000)
+	if((fat_table[index] & 0xF000) == 0xF000)
 		return 0x0000;
 	return fat_table[index];
 }
@@ -64,6 +62,11 @@ fat_addr_t total_clusters(){
 int is_directory(uint8_t attr){
 	return attr & 0x10;
 }
+
+int is_special(uint8_t attr){
+	return attr & 0x08;
+}
+
 struct tm create_time(uint16_t create_time, uint16_t create_date){
 	struct tm file_tm;
 	file_tm.tm_year = ((create_date & (0b1111111000000000)) >> 9) + 80;

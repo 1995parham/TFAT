@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Wed 17 Dec 2014 12:18:31 AM IRST
+// * Last Modified : Fri 19 Dec 2014 12:56:28 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -84,6 +84,8 @@ fat_addr_t data_sectors();
 fat_addr_t total_clusters();
 // Is directory
 int is_directory(uint8_t attr);
+// Is special file (for more information see [http://www.tavi.co.uk/phobos/fat.html])
+int is_special(uint8_t attr);
 // Get create timestamp
 struct tm create_time(uint16_t create_time, uint16_t create_date);
 

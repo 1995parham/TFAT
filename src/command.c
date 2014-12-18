@@ -4,13 +4,14 @@
 // 
 // * Creation Date : 16-12-2014
 //
-// * Last Modified : Thu 18 Dec 2014 01:22:46 AM IRST
+// * Last Modified : Fri 19 Dec 2014 01:15:39 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 #include "user.h"
 #include "command.h"
@@ -24,6 +25,7 @@
 
 
 void quit_command(){
+	umount();
 	exit(0);
 }
 
@@ -33,6 +35,14 @@ void mount_command(const char* dev){
 
 void ls_command(const char* dir){
 	ls(dir);
+}
+
+void chain_command(uint16_t index){
+	chain(index);
+}
+
+void fat_command(){
+	fat();
 }
 
 void show_command(char c){
@@ -86,6 +96,12 @@ void command_dispatcher(const char* command){
 		char dir[MAX_BUFF];
 		sscanf(command, "%s %s", verb, dir);
 		ls_command(dir);
+	}else if(!strcmp(verb, "chain")){
+		uint16_t index;
+		sscanf(command, "%s %hu", verb, &index);
+		chain_command(index);
+	}else if(!strcmp(verb, "fat")){
+		fat_command();
 	}else if(!strcmp(verb, "show")){
 		char c;
 		sscanf(command, "%s %c", verb, &c);
