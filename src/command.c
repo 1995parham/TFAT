@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 16-12-2014
 //
-// * Last Modified : Fri 19 Dec 2014 01:15:39 AM IRST
+// * Last Modified : Fri 19 Dec 2014 02:16:15 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -43,6 +43,10 @@ void chain_command(uint16_t index){
 
 void fat_command(){
 	fat();
+}
+
+void dump_fat_command(){
+	dump_fat();
 }
 
 void show_command(char c){
@@ -102,6 +106,10 @@ void command_dispatcher(const char* command){
 		chain_command(index);
 	}else if(!strcmp(verb, "fat")){
 		fat_command();
+	}else if(!strcmp(verb, "dump_fat")){
+		char path[MAX_BUFF];
+		sscanf(command, "%s %s", verb, path);
+		dump_fat_command(path);
 	}else if(!strcmp(verb, "show")){
 		char c;
 		sscanf(command, "%s %c", verb, &c);

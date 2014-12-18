@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Fri 19 Dec 2014 01:27:41 AM IRST
+// * Last Modified : Fri 19 Dec 2014 02:14:39 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -113,6 +113,17 @@ void fat(){
 	fat_addr_t i = 0;
 	for(i = 0; i < fat_boot.table_size_16; i++)
 		printf("%hX <--> %hX\n", i, fat_table[i]); 
+}
+
+
+void dump_fat(const char* path){
+	if(fd == 0)
+		die("Please open valid device first");
+	int file = open(path, O_WRONLY | O_CREAT, 0644);
+	if(file <= 0)
+		die("cannot open %s", path);	
+	write(file, fat_table, 512 * fat_boot.table_size_16);
+	close(file);
 }
 
 void umount(){
