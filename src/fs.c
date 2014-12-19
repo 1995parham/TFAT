@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 19-12-2014
 //
-// * Last Modified : Sat 20 Dec 2014 12:33:25 AM IRST
+// * Last Modified : Sat 20 Dec 2014 02:24:00 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -23,9 +23,8 @@ void init_fs(int dev){
 
 fat_dir_layout_t* find(const char* path){
 	int i = 0;
-	fprintf(stderr, "%s\n", path);
-	for(i = 0; i < 512; i++){
-		if(!is_directory(root_dir[i].attr) && root_dir[i].file_size && !is_special(root_dir[i].attr)){
+	for(i = 0; i < fat_boot.root_entry_count; i++){
+		if(root_dir[i].file_size && !is_special(root_dir[i].attr)){
 			char dis_name[255];
 			// Store file name
 			char* temp = get_name(root_dir[i].name);
@@ -44,32 +43,38 @@ fat_dir_layout_t* find(const char* path){
 			if(!strcmp(dis_name, path))
 				return &root_dir[i];
 			
-		}else if(is_directory(root_dir[i].attr) && root_dir[i].file_size){
+		}if(is_directory(root_dir[i].attr)){
+			char dis_name[255];
+			// Store file name
+			char* temp = get_name(root_dir[i].name);
+			if(temp){
+				strcpy(dis_name, temp);
+				free(temp);
+			}else{
+				continue;
+			}
+			
+			if(!strcmp(dis_name, path))
+				return &root_dir[i];
 		}
 	}
 	return NULL;
 }
 
+// TODO add directory chain handling with realoc
 fat_dir_layout_t* parse_dir(fat_dir_layout_t dir, int* dir_size){
-	*dir_size = dir.file_size / 32;
 	if(!is_directory(dir.attr))
 		return NULL;
 	
-	fat_dir_layout_t* entries = malloc(sizeof(fat_dir_layout_t) * (*dir_size));
+	fat_dir_layout_t* entries = malloc(512 * fat_boot.sectors_per_cluster);
 	
-	unsigned int size = dir.file_size;
-	fat_addr_t cluster = dir.first_cluster;
 	int index = 0;
+	fat_addr_t cluster = dir.first_cluster;
 	while(cluster){
-		if(size < fat_boot.sectors_per_cluster * 512){
-			lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
-			read(fd, entries + index, size);
-		}else{
-			lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
-			read(fd, entries + index, 512 * fat_boot.sectors_per_cluster);
-			size -= 512 * fat_boot.sectors_per_cluster;
-			index += 512 * fat_boot.sectors_per_cluster;
-		}
+		lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
+		read(fd, entries + index, 512 * fat_boot.sectors_per_cluster);
+		*dir_size += (512 * fat_boot.sectors_per_cluster) / sizeof(fat_dir_layout_t);
+		index += 512 * fat_boot.sectors_per_cluster;
 		cluster = next_cluster(cluster);
 	}
 

@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Sat 20 Dec 2014 12:26:32 AM IRST
+// * Last Modified : Sat 20 Dec 2014 02:27:41 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -53,13 +53,13 @@ void info(){
 
 }
 
-void ls(const char* dir){
-	if(fd == 0)
-		die("Please open valid device first");
-
+// This is a helper funtion for printing
+// list directory
+//
+void list(fat_dir_layout_t* root_dir, int size){
 	int i = 0;
-	for(i = 0; i < 512; i++){
-		if(!is_directory(root_dir[i].attr) && root_dir[i].file_size && !is_special(root_dir[i].attr)){
+	for(i = 0; i < size; i++){
+		if(root_dir[i].file_size && !is_special(root_dir[i].attr)){
 			char dis_name[255];
 			char dis_time[255];
 			// Store file name
@@ -75,12 +75,61 @@ void ls(const char* dir){
 			temp = get_extention(root_dir[i].extention);
 			strcpy(dis_name + strlen(dis_name), temp);
 			free(temp);
-			
+		
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
 			printf("%s %4u %12s %hu\n", dis_time, root_dir[i].file_size, dis_name, root_dir[i].first_cluster);
-		}else if(is_directory(root_dir[i].attr) && root_dir[i].file_size){
 		}
+		// Subdirectory. Indicates that the cluster-chain associated with this entry gets interpreted as subdirectory instead of as a file. 
+		// Subdirectories have a filesize entry of zero.
+		if(is_directory(root_dir[i].attr)){
+			char dis_name[255];
+			char dis_time[255];
+			// Store file name
+			char* temp = get_name(root_dir[i].name);
+			if(temp){
+				strcpy(dis_name, temp);
+				free(temp);
+			}else{
+				continue;
+			}
+		
+			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
+			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
+			printf("%s ---- %12s %hu\n", dis_time, dis_name, root_dir[i].first_cluster);
+		}
+	}
+}
+
+void ls(const char* dir){
+	if(fd == 0)
+		die("Please open valid device first");
+	
+	// First if our dir == '/'
+	// we need to list root_dir
+	// so we cannot use our find
+	// function and do it manually
+	//
+
+	if(!strcmp(dir, "/")){
+		list(root_dir, fat_boot.root_entry_count);
+	}
+	else{
+		int size;
+		fat_dir_layout_t* folder = find(dir);
+		if(folder==NULL){
+			printf("Folder %s Not Found\n", dir);
+			return;
+		}
+		fat_dir_layout_t* root_dir = parse_dir(*folder, &size);		
+		if(root_dir==NULL){
+			printf("Folder %s Not Found\n", dir);
+			return;
+		}
+
+		list(root_dir, size);
+
+		free(root_dir);
 	}
 }
 

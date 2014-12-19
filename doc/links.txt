@@ -1,2 +1,3 @@
 [http://www.tavi.co.uk/phobos/fat.html]
 [http://wiki.osdev.org/FAT]
+[http://en.wikipedia.org/wiki/Design_of_the_FAT_file_system]
