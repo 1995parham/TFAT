@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 19-12-2014
 //
-// * Last Modified : Fri 19 Dec 2014 11:04:01 PM IRST
+// * Last Modified : Sat 20 Dec 2014 12:27:39 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -13,6 +13,8 @@
 
 #include "FAT.h"
 
+// Set file descriptor for fs handler
+void init_fs(int dev);
 // Find path in filesystem tree.
 fat_dir_layout_t* find(const char* path);
 // Parse directory and set dir_size to entry number and set entry it self in fat_dir_layout*.

@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Fri 19 Dec 2014 09:19:15 PM IRST
+// * Last Modified : Sat 20 Dec 2014 12:26:32 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -28,6 +28,7 @@ void mount(const char* dev){
 		die("cannot open %s", dev);
 
 	init_fat(fd);	
+	init_fs(fd);
 
 	info();
 }

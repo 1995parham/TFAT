@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Fri 19 Dec 2014 05:48:57 PM IRST
+// * Last Modified : Sat 20 Dec 2014 12:34:10 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -17,7 +17,7 @@
 
 typedef struct{
 	uint8_t 	bios_drive_num;
-	uint8_t 	reserved1;
+	uint8_t 	reserved;
 	uint8_t 	boot_signature;
 	uint32_t	volume_id;
 	uint8_t		volume_label[11];

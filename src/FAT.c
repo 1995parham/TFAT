@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Fri 19 Dec 2014 08:48:17 PM IRST
+// * Last Modified : Sat 20 Dec 2014 12:24:46 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -33,7 +33,7 @@ void init_fat(int fd){
 	read(fd, fat_table_bak, 512 * fat_boot.table_size_16);
 	
 	root_dir = (fat_dir_layout_t*)malloc(sizeof(fat_dir_layout_t) * fat_boot.root_entry_count);
-	read(fd, root_dir, fat_boot.root_entry_count * 32);
+	read(fd, root_dir, fat_boot.root_entry_count * sizeof(fat_dir_layout_t));
 
 	data_offset = lseek(fd, 0, SEEK_CUR);
 }
