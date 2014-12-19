@@ -2,4 +2,4 @@
 
 [0] 1) Adding BFS for searching directory tree.
 [1] 2) Adding path parser.
-[2] 3) Adding cat command.
+[2] 3) Adding B-tree for searching.
