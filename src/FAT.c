@@ -4,11 +4,12 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Fri 19 Dec 2014 01:30:33 AM IRST
+// * Last Modified : Fri 19 Dec 2014 08:48:17 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
 #include "FAT.h"
+#include "common.h"
 
 #include <time.h>
 #include <malloc.h>
@@ -65,6 +66,36 @@ int is_directory(uint8_t attr){
 
 int is_special(uint8_t attr){
 	return attr & 0x08;
+}
+
+char* get_name(uint8_t name[]){
+	if(name[0] == 0x00) 		// Filename never used. 
+		return NULL;
+	
+	// TODO please fix following condition
+	if(name[0] == 0xE5); 		// The filename has been used, but the file has been deleted
+	
+	char* ret_name = (char*)malloc(9 * sizeof(char));
+	if(name[0] == 0x05) 		// The first character of the filename is actually 0xe5.
+		ret_name[0] = 0xe5;
+	else
+		ret_name[0] = name[0];
+	int i;
+	for(i = 1; i < 8; i++){
+		ret_name[i] = name[i];
+	}
+	ret_name[8] = 0;
+	return rtrim(ret_name);
+}
+
+char* get_extention(uint8_t extention[]){
+	char* ret_extention = (char*)malloc(4 * sizeof(char));
+	int i;
+	for(i = 0; i < 3; i++){
+		ret_extention[i] = extention[i];
+	}
+	ret_extention[3] = 0;
+	return rtrim(ret_extention);
 }
 
 struct tm create_time(uint16_t create_time, uint16_t create_date){

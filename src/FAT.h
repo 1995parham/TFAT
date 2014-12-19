@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 08-12-2014
 //
-// * Last Modified : Fri 19 Dec 2014 12:56:28 AM IRST
+// * Last Modified : Fri 19 Dec 2014 05:48:57 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -62,13 +62,28 @@ typedef struct{
 	uint32_t	file_size;
 }__attribute__((packed)) fat_dir_layout_t;
 
+typedef struct{
+	uint8_t 	order;
+	uint16_t 	first_name[5];
+	uint8_t 	attr; 		// Always equals 0x0F
+	uint8_t 	type;
+	uint8_t 	checksum;
+	uint16_t 	last_name[6];
+	uint16_t 	zero; 		// Why ???
+	uint16_t 	final_name[2];
+}__attribute__((packed)) fat_dir_long_name_t;
+
+// Public structs and vars
+
 extern fat_BS_t fat_boot;
 extern fat_addr_t *fat_table;
 extern fat_addr_t *fat_table_bak;
 extern fat_dir_layout_t *root_dir;
 extern off_t data_offset;
 
-// Buid and initiate fat, fat_table, root_dir
+// Functions
+
+// Buid and initiate fat, fat_table, fat_table_bak, root_dir and data_offset
 void init_fat(int fd);
 // Find next cluster from fat table
 fat_addr_t next_cluster(fat_addr_t index);
@@ -82,9 +97,14 @@ fat_addr_t first_data_sector();
 fat_addr_t data_sectors();
 // The total number of clusters
 fat_addr_t total_clusters();
+// Get name in null-terminated string
+char* get_name(uint8_t name[]);
+// Get extention in null-terminated string
+char* get_extention(uint8_t extention[]);
 // Is directory
 int is_directory(uint8_t attr);
 // Is special file (for more information see [http://www.tavi.co.uk/phobos/fat.html])
+// as OSDev say it contains VOLUME_ID
 int is_special(uint8_t attr);
 // Get create timestamp
 struct tm create_time(uint16_t create_time, uint16_t create_date);

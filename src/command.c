@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 16-12-2014
 //
-// * Last Modified : Fri 19 Dec 2014 02:16:15 AM IRST
+// * Last Modified : Fri 19 Dec 2014 09:14:04 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -47,6 +47,18 @@ void fat_command(){
 
 void dump_fat_command(){
 	dump_fat();
+}
+
+void dump_command(const char* dir){
+	dump(dir);
+}
+
+void hdump_command(const char* dir){
+	hdump(dir);
+}
+
+void info_command(){
+	info();
 }
 
 void show_command(char c){
@@ -110,10 +122,22 @@ void command_dispatcher(const char* command){
 		char path[MAX_BUFF];
 		sscanf(command, "%s %s", verb, path);
 		dump_fat_command(path);
+	}else if(!strcmp(verb, "dump")){
+		char dir[MAX_BUFF];
+		sscanf(command, "%s %s", verb, dir);
+		dump_command(dir);
+	}else if(!strcmp(verb, "hdump")){
+		char dir[MAX_BUFF];
+		sscanf(command, "%s %s", verb, dir);
+		hdump_command(dir);
+	}else if(!strcmp(verb, "info")){
+		info_command();
 	}else if(!strcmp(verb, "show")){
 		char c;
 		sscanf(command, "%s %c", verb, &c);
 		show_command(c);
+	}else{
+		printf("404 Not Found\n");
 	}
 }
 

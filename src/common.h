@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Wed 17 Dec 2014 01:37:23 AM IRST
+// * Last Modified : Fri 19 Dec 2014 05:51:57 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -13,5 +13,7 @@
 
 #define MAX_BUFF 1000 * 1000
 
+char* rtrim(char *string);
 void die(const char *fmt, ...);
+
 #endif

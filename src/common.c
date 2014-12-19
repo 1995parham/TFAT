@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 05-12-2014
 //
-// * Last Modified : Wed 17 Dec 2014 01:33:12 AM IRST
+// * Last Modified : Fri 19 Dec 2014 08:19:24 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -15,6 +15,13 @@
 #include <string.h>
 
 #include "common.h"
+
+char* rtrim(char *string){
+	char *original = string + strlen(string);
+	while(*(--original) == ' ');
+	*(original + 1) = 0;
+	return string;
+}
 
 void die(const char *fmt, ...){
 	char buf[MAX_BUFF];
