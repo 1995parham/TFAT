@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 19-12-2014
 //
-// * Last Modified : Sat 20 Dec 2014 08:11:22 AM IRST
+// * Last Modified : Sat 20 Dec 2014 01:38:47 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -19,10 +19,14 @@ static int fd = -1;
 
 void init_fs(int dev){
 	fd = dev;
+	// TODO load all filesystem tree in hard
 }
 
+
+
 fat_dir_layout_t* find(const char* path){
-	// Tokenizing .....
+	// Tokenizing ....
+	// note that after you initiate strtok you can use it in all your function.
 	char* str = malloc(strlen(path) * sizeof(char));
 	strcpy(str, path);
 	char* token = strtok(str, "/");
