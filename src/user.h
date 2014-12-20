@@ -1,13 +1,15 @@
-// In The Name Of God
-// ========================================
-// * File Name : user.h
-// 
-// * Creation Date : 17-12-2014
-//
-// * Last Modified : Fri 19 Dec 2014 09:10:46 PM IRST
-//
-// * Created By : Parham Alvani (parham.alvani@gmail.com)
-// =======================================
+/* 
+ * In The Name Of God
+ * ========================================
+ * [] File Name : user.h
+ *
+ * [] Creation Date : 21-12-2014
+ *
+ * [] Last Modified : Sun 21 Dec 2014 12:56:26 AM IRST
+ *
+ * [] Created By : Parham Alvani (parham.alvani@gmail.com)
+ * =======================================
+*/
 #ifndef USER_H
 #define USER_H
 

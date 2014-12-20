@@ -1,13 +1,15 @@
-// In The Name Of God
-// ========================================
-// * File Name : FAT.h
-// 
-// * Creation Date : 08-12-2014
-//
-// * Last Modified : Sat 20 Dec 2014 02:23:10 AM IRST
-//
-// * Created By : Parham Alvani (parham.alvani@gmail.com)
-// =======================================
+/* 
+ * In The Name Of God
+ * ========================================
+ * [] File Name : FAT.h
+ *
+ * [] Creation Date : 21-12-2014
+ *
+ * [] Last Modified : Sun 21 Dec 2014 12:56:25 AM IRST
+ *
+ * [] Created By : Parham Alvani (parham.alvani@gmail.com)
+ * =======================================
+*/
 #ifndef FAT_H
 #define FAT_H
 

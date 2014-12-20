@@ -1,13 +1,15 @@
-// In The Name Of God
-// ========================================
-// * File Name : main.c
-// 
-// * Creation Date : 06-12-2014
-//
-// * Last Modified : Sat 20 Dec 2014 11:33:49 PM IRST
-//
-// * Created By : Parham Alvani (parham.alvani@gmail.com)
-// =======================================
+/* 
+ * In The Name Of God
+ * ========================================
+ * [] File Name : main.c
+ *
+ * [] Creation Date : 21-12-2014
+ *
+ * [] Last Modified : Sun 21 Dec 2014 12:56:21 AM IRST
+ *
+ * [] Created By : Parham Alvani (parham.alvani@gmail.com)
+ * =======================================
+*/
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>

@@ -1,13 +1,15 @@
-// In The Name Of God
-// ========================================
-// * File Name : fs.c
-// 
-// * Creation Date : 19-12-2014
-//
-// * Last Modified : Sat 20 Dec 2014 01:38:47 PM IRST
-//
-// * Created By : Parham Alvani (parham.alvani@gmail.com)
-// =======================================
+/* 
+ * In The Name Of God
+ * ========================================
+ * [] File Name : fs.c
+ *
+ * [] Creation Date : 21-12-2014
+ *
+ * [] Last Modified : Sun 21 Dec 2014 12:56:21 AM IRST
+ *
+ * [] Created By : Parham Alvani (parham.alvani@gmail.com)
+ * =======================================
+*/
 #include <string.h>
 #include <malloc.h>
 #include <unistd.h>

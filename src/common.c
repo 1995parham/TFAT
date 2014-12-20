@@ -1,13 +1,15 @@
-// In The Name Of God
-// ========================================
-// * File Name : common.c
-// 
-// * Creation Date : 05-12-2014
-//
-// * Last Modified : Fri 19 Dec 2014 08:19:24 PM IRST
-//
-// * Created By : Parham Alvani (parham.alvani@gmail.com)
-// =======================================
+/* 
+ * In The Name Of God
+ * ========================================
+ * [] File Name : common.c
+ *
+ * [] Creation Date : 21-12-2014
+ *
+ * [] Last Modified : Sun 21 Dec 2014 12:56:20 AM IRST
+ *
+ * [] Created By : Parham Alvani (parham.alvani@gmail.com)
+ * =======================================
+*/
 
 #include <stdio.h>
 #include <stdarg.h>

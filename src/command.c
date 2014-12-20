@@ -1,13 +1,15 @@
-// In The Name Of God
-// ========================================
-// * File Name : command.c
-// 
-// * Creation Date : 16-12-2014
-//
-// * Last Modified : Fri 19 Dec 2014 09:14:04 PM IRST
-//
-// * Created By : Parham Alvani (parham.alvani@gmail.com)
-// =======================================
+/* 
+ * In The Name Of God
+ * ========================================
+ * [] File Name : command.c
+ *
+ * [] Creation Date : 21-12-2014
+ *
+ * [] Last Modified : Sun 21 Dec 2014 12:56:19 AM IRST
+ *
+ * [] Created By : Parham Alvani (parham.alvani@gmail.com)
+ * =======================================
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
