@@ -1,5 +1,6 @@
 [Priority] id) message @ filename
 
+[0] 0) Stick to the codingStyle of our prophet torvalds as soon as possible. @ codingStyle
 [0] 1) Adding BFS for searching directory tree.
 [1] 2) Adding path parser.
 [2] 3) Adding B-tree for searching.

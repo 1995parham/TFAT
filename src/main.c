@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 06-12-2014
 //
-// * Last Modified : Thu 18 Dec 2014 01:24:36 AM IRST
+// * Last Modified : Sat 20 Dec 2014 11:33:49 PM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
 	printf("TFAT version 01, Copyright (C) 2015 Parham Alvani(parham.alvani@gmail.com)\n");
 	printf("TFAT comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n");
 	printf("This is free software, and you are welcome to redistribute it\n");
-    	printf("under certain conditions; type `show c' for details.\n");
+	printf("under certain conditions; type `show c' for details.\n");
 	printf("\n");
 
 	char* command;
