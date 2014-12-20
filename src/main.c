@@ -1,11 +1,11 @@
-/* 
+/*
  * In The Name Of God
  * ========================================
  * [] File Name : main.c
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 12:56:21 AM IRST
+ * [] Last Modified : Sun 21 Dec 2014 02:13:50 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -19,19 +19,20 @@
 
 #include "command.h"
 
-int main(int argc, char* argv[]){
+int main(int argc, char *argv[])
+{
 	printf("TFAT version 01, Copyright (C) 2015 Parham Alvani(parham.alvani@gmail.com)\n");
 	printf("TFAT comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n");
 	printf("This is free software, and you are welcome to redistribute it\n");
 	printf("under certain conditions; type `show c' for details.\n");
 	printf("\n");
 
-	char* command;
-	while(true){
+	char *command;
+
+	while (true) {
 		command = readline("TFAT> ");
-		if(command && *command){
+		if (command && *command)
 			add_history(command);
-		}
 		command_dispatcher(command);
 		free(command);
 	}
