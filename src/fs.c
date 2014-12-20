@@ -4,7 +4,7 @@
 // 
 // * Creation Date : 19-12-2014
 //
-// * Last Modified : Sat 20 Dec 2014 02:24:00 AM IRST
+// * Last Modified : Sat 20 Dec 2014 08:11:22 AM IRST
 //
 // * Created By : Parham Alvani (parham.alvani@gmail.com)
 // =======================================
@@ -22,6 +22,17 @@ void init_fs(int dev){
 }
 
 fat_dir_layout_t* find(const char* path){
+	// Tokenizing .....
+	char* str = malloc(strlen(path) * sizeof(char));
+	strcpy(str, path);
+	char* token = strtok(str, "/");
+	while(token){
+		printf("%s\n", token);
+		token = strtok(NULL, "/");
+	}
+	free(str);
+
+
 	int i = 0;
 	for(i = 0; i < fat_boot.root_entry_count; i++){
 		if(root_dir[i].file_size && !is_special(root_dir[i].attr)){
