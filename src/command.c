@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 09:13:07 AM IRST
+ * [] Last Modified : Sun 21 Dec 2014 11:15:47 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -114,8 +114,12 @@ void show_command(char c)
 void command_dispatcher(const char *command)
 {
 	char verb[10];
+	int len;
 
-	sscanf(command, "%s", verb);
+	len = sscanf(command, "%s", verb);
+	if (len < 1) {
+		return;
+	}
 
 	if (!strcmp(verb, "quit")) {
 		quit_command();
@@ -153,25 +157,45 @@ void command_dispatcher(const char *command)
 		fat_command();
 	} else if (!strcmp(verb, "dump_fat")) {
 		char path[MAX_BUFF];
+		int len;
 
-		sscanf(command, "%s %s", verb, path);
+		len = sscanf(command, "%s %s", verb, path);
+		if (len < 2) {
+			printf("dump_fat file-path\n");
+			return;
+		}
 		dump_fat_command(path);
 	} else if (!strcmp(verb, "dump")) {
 		char dir[MAX_BUFF];
+		int len;
 
-		sscanf(command, "%s %s", verb, dir);
+		len = sscanf(command, "%s %s", verb, dir);
+		if (len < 2) {
+			printf("dump file-name");
+			return;
+		}
 		dump_command(dir);
 	} else if (!strcmp(verb, "hdump")) {
 		char dir[MAX_BUFF];
+		int len;
 
-		sscanf(command, "%s %s", verb, dir);
+		len = sscanf(command, "%s %s", verb, dir);
+		if (len < 2) {
+			printf("hdump file-name");
+			return;
+		}
 		hdump_command(dir);
 	} else if (!strcmp(verb, "info")) {
 		info_command();
 	} else if (!strcmp(verb, "show")) {
 		char c;
+		int len;
 
-		sscanf(command, "%s %c", verb, &c);
+		len = sscanf(command, "%s %c", verb, &c);
+		if (len < 2) {
+			printf("show w|c\n");
+			return;
+		}
 		show_command(c);
 	} else {
 		printf("404 Not Found\n");
