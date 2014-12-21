@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 02:19:49 AM IRST
+ * [] Last Modified : Mon 22 Dec 2014 01:06:31 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -21,10 +21,14 @@
 char *rtrim(char *string)
 {
 	char *original = string + strlen(string);
+	int i = strlen(string);
 
-	while (*(--original) == ' ')
+	while (i-- && *(--original) == ' ')
 		;
-	*(original + 1) = 0;
+	if (i != -1)
+		*(original + 1) = 0;
+	else
+		*(original) = 0;
 	return string;
 }
 

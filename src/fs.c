@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 22 Dec 2014 12:37:03 AM IRST
+ * [] Last Modified : Mon 22 Dec 2014 01:19:20 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -119,6 +119,7 @@ struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size)
 	if (!is_directory(dir.attr))
 		return NULL;
 
+	*dir_size = 0;
 	struct fat_dir_layout *entries = malloc(512 * fat_boot.sectors_per_cluster);
 	int index = 0;
 	fat_addr_t cluster = dir.first_cluster;
