@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 12:56:21 AM IRST
+ * [] Last Modified : Sun 21 Dec 2014 08:39:11 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -19,19 +19,26 @@
 
 static int fd = -1;
 
-void init_fs(int dev){
+void init_fs(int dev)
+{
 	fd = dev;
-	// TODO load all filesystem tree in hard
+	/*
+	 * TODO load all filesystem tree in
+	 * memory
+	*/
 }
 
 
 
-fat_dir_layout_t* find(const char* path){
-	// Tokenizing ....
-	// note that after you initiate strtok you can use it in all your function.
-	char* str = malloc(strlen(path) * sizeof(char));
+struct fat_dir_layout *find(const char *path)
+{
+	/*
+	 * Tokenizing ....
+	 * note that after you initiate strtok you can use it in all your function.
+	*/
+	char *str = malloc(strlen(path) * sizeof(char));
 	strcpy(str, path);
-	char* token = strtok(str, "/");
+	char *token = strtok(str, "/");
 	while(token){
 		printf("%s\n", token);
 		token = strtok(NULL, "/");
@@ -40,7 +47,8 @@ fat_dir_layout_t* find(const char* path){
 
 
 	int i = 0;
-	for(i = 0; i < fat_boot.root_entry_count; i++){
+
+	for (i = 0; i < fat_boot.root_entry_count; i++) {
 		if(root_dir[i].file_size && !is_special(root_dir[i].attr)){
 			char dis_name[255];
 			// Store file name
@@ -79,18 +87,18 @@ fat_dir_layout_t* find(const char* path){
 }
 
 // TODO add directory chain handling with realoc
-fat_dir_layout_t* parse_dir(fat_dir_layout_t dir, int* dir_size){
-	if(!is_directory(dir.attr))
+struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size){
+	if (!is_directory(dir.attr))
 		return NULL;
 	
-	fat_dir_layout_t* entries = malloc(512 * fat_boot.sectors_per_cluster);
+	struct fat_dir_layout *entries = malloc(512 * fat_boot.sectors_per_cluster);
 	
 	int index = 0;
 	fat_addr_t cluster = dir.first_cluster;
-	while(cluster){
+	while(cluster) {
 		lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
 		read(fd, entries + index, 512 * fat_boot.sectors_per_cluster);
-		*dir_size += (512 * fat_boot.sectors_per_cluster) / sizeof(fat_dir_layout_t);
+		*dir_size += (512 * fat_boot.sectors_per_cluster) / sizeof(struct fat_dir_layout);
 		index += 512 * fat_boot.sectors_per_cluster;
 		cluster = next_cluster(cluster);
 	}
