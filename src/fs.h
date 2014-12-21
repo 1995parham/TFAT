@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 03:34:20 AM IRST
+ * [] Last Modified : Mon 22 Dec 2014 12:06:12 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -14,20 +14,24 @@
 #define FS_H
 
 #include "FAT.h"
+
 /*
  * Set file descriptor for fs handler
+ * TODO create tree for directories
 */
 void init_fs(int dev);
 
 /*
- * Find part of path in a directory and call itselt on that directory with strtok
- * if strtok return null, it return address of finded directory, please free all
- * address and copy this address in a heap after return.
+ * Find part of path in a directory and return it's address
+ * if path not found it return NULL
+ * you shoud free directory list and store returned address
+ * elsewhere.
 */
-struct fat_dir_layout *search(struct fat_dir_layout *root_dir, const char *term);
+struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char *term, int size);
 
 /*
  * Find path in filesystem tree.
+ * please free returned address.
 */
 struct fat_dir_layout *find(const char *path);
 

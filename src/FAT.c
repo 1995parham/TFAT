@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 03:11:49 AM IRST
+ * [] Last Modified : Sun 21 Dec 2014 11:55:10 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -73,12 +73,12 @@ fat_addr_t total_clusters(void)
 	return (data_sectors() / fat_boot.sectors_per_cluster);
 }
 
-int is_directory(uint8_t attr)
+int is_directory(const uint8_t attr)
 {
 	return attr & 0x10;
 }
 
-int is_special(uint8_t attr)
+int is_special(const uint8_t attr)
 {
 	return attr & 0x08;
 }
@@ -89,7 +89,7 @@ int is_special(uint8_t attr)
  * 0xE5: The filename has been used, but the file has been deleted
  * 0x05: The first character of filename is actually 0xe5
 */
-char *get_name(uint8_t name[])
+char *get_name(const uint8_t name[])
 {
 	if (name[0] == 0x00)
 		return NULL;
@@ -114,7 +114,7 @@ char *get_name(uint8_t name[])
 	return rtrim(ret_name);
 }
 
-char *get_extention(uint8_t extention[])
+char *get_extention(const uint8_t extention[])
 {
 	char *ret_extention = malloc(4 * sizeof(char));
 	int i;
@@ -126,7 +126,7 @@ char *get_extention(uint8_t extention[])
 	return rtrim(ret_extention);
 }
 
-struct tm create_time(uint16_t create_time, uint16_t create_date)
+struct tm create_time(const uint16_t create_time, const uint16_t create_date)
 {
 	struct tm file_tm;
 

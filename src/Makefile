@@ -15,7 +15,7 @@ command.o: command.c command.h user.h common.h
 	gcc $(CFLAGS) -c command.c
 FAT.o: FAT.c FAT.h
 	gcc $(CFLAGS) -c FAT.c
-fs.o: fs.h fs.c
+fs.o: fs.h fs.c FAT.h
 	gcc $(CFLAGS) -c fs.c
 .PHONY: clean
 clean:

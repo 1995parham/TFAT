@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 02:57:42 AM IRST
+ * [] Last Modified : Sun 21 Dec 2014 11:54:37 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -127,28 +127,28 @@ fat_addr_t total_clusters(void);
 /*
  * Get name in null-terminated string
 */
-char *get_name(uint8_t name[]);
+char *get_name(const uint8_t name[]);
 
 /*
  * Get extention in null-terminated string
 */
-char *get_extention(uint8_t extention[]);
+char *get_extention(const uint8_t extention[]);
 
 /*
  * Is directory
 */
-int is_directory(uint8_t attr);
+int is_directory(const uint8_t attr);
 
 /*
  * Is special file
  * (for more information see [http://www.tavi.co.uk/phobos/fat.html])
  * as OSDev say it contains VOLUME_ID
 */
-int is_special(uint8_t attr);
+int is_special(const uint8_t attr);
 
 /*
  * Get create timestamp
 */
-struct tm create_time(uint16_t create_time, uint16_t create_date);
+struct tm create_time(const uint16_t create_time, const uint16_t create_date);
 
 #endif

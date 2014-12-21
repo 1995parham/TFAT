@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 03:30:25 AM IRST
+ * [] Last Modified : Mon 22 Dec 2014 12:41:15 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -50,6 +50,7 @@ void info(void)
 	printf("FAT Tables: %hhu\n", fat_boot.table_count);
 	printf("Table Size: %hu\n", fat_boot.table_size_16);
 	printf("Total Sectors: %hu\n", fat_boot.total_sectors_16);
+	printf("Total Size: %u KB\n", fat_boot.total_sectors_16 * fat_boot.bytes_per_sector / 1024);
 
 	fat_addr_t root_cluster = first_data_sector();
 
@@ -113,7 +114,7 @@ void list(struct fat_dir_layout *root_dir, int size)
 }
 
 /*
- * First if our dir == '/'
+ * First if our dir == '/',
  * we need to list root_dir
  * so we cannot use our find
  * function so we do it manually
@@ -122,6 +123,11 @@ void ls(const char *dir)
 {
 	if (fd == 0)
 		die("Please open valid device first");
+
+	if (dir[0] != '/') {
+		printf("Invalid path\n");
+		return;
+	}
 
 	if (!strcmp(dir, "/")) {
 		list(root_dir, fat_boot.root_entry_count);
@@ -148,6 +154,11 @@ void hdump(const char *dir)
 {
 	if (fd == 0)
 		die("Please open valid device first");
+
+	if (dir[0] != '/') {
+		printf("Invalid path\n");
+		return;
+	}
 
 	struct fat_dir_layout *file = find(dir);
 	if (file == NULL) {
@@ -188,6 +199,11 @@ void dump(const char *dir)
 {
 	if (fd == 0)
 		die("Please open valid device first");
+
+	if (dir[0] != '/') {
+		printf("Invalid path\n");
+		return;
+	}
 
 	struct fat_dir_layout *file = find(dir);
 	if (file == NULL) {
