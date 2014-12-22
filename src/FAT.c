@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 11:55:10 PM IRST
+ * [] Last Modified : Mon 22 Dec 2014 03:35:39 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -39,6 +39,13 @@ void init_fat(int fd)
 	read(fd, root_dir, fat_boot.root_entry_count * sizeof(struct fat_dir_layout));
 
 	data_offset = lseek(fd, 0, SEEK_CUR);
+}
+
+void free_fat()
+{
+	free(fat_table);
+	free(fat_table_bak);
+	free(root_dir);
 }
 
 fat_addr_t next_cluster(fat_addr_t index)

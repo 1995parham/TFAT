@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 11:54:37 PM IRST
+ * [] Last Modified : Mon 22 Dec 2014 03:35:55 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -86,12 +86,20 @@ extern off_t data_offset;
 /* Functions */
 
 /*
- * Buid and initiate fat,
+ * Buid and initiate
+ * fat_boot,
  * fat_table,
  * fat_table_bak,
  * root_dir and data_offset
 */
 void init_fat(int fd);
+
+/*
+ * Free fat_table,
+ * fat_table_bak and
+ * root_dir
+*/
+void free_fat();
 
 /*
  * Find next cluster from fat table

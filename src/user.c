@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 22 Dec 2014 01:18:40 AM IRST
+ * [] Last Modified : Mon 22 Dec 2014 03:36:43 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -289,6 +289,8 @@ void dump_fat(const char *path)
 
 void umount(void)
 {
-	if (fd > 0)
+	if (fd > 0) {
 		close(fd);
+		free_fat();
+	}
 }
