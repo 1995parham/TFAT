@@ -11,10 +11,10 @@ Following library from GNU with GPL used in this project:
 In this project we using kernel-coding style from Linus Torvalds and using some script from kernel to validate our code against that.
 
 #Contribution
-For todo list see doc/TODlist.md
+For todo list see doc/TODlist.md  
 If you have bug or idea about this project send me an [email](mailto:parham.alvani@gmail.com)
 
-#Dependecies
+#Dependencies
 1. GNU readline
 2. GNU histroy  
 both project available at [GNU READLINE HOMEPAGE](http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html)
