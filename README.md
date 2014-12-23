@@ -16,7 +16,7 @@ If you have bug or idea about this project send me an [email](mailto:parham.alva
 
 #Dependecies
 1. GNU readline
-2. GNU histroy
+2. GNU histroy  
 both project available at [GNU READLINE HOMEPAGE](http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html)
 
 #Installation
