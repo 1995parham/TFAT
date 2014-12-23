@@ -1,6 +1,6 @@
 TFAT
 ====
-#Interoduction
+#Introduction
 TOs kernel FAT16 filesystem parser and handler with interactive shell  
 
 This project originally written for assembly programming course at Amirkabir university. This project completely written by C under linux mint with gcc.  
