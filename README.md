@@ -10,6 +10,10 @@ Following library from GNU with GPL used in this project:
 
 In this project we using kernel-coding style from Linus Torvalds and using some script from kernel to validate our code against that.
 
+#Contribution
+For todo list see doc/TODlist.md
+If you have bug or idea about this project send me an [email](mailto:parham.alvani@gmail.com)
+
 #Dependecies
 1. GNU readline
 2. GNU histroy
@@ -20,3 +24,12 @@ After compiling GNU readline copy libreadline.a & libhistory.a into src folder a
 
 	$ make
 
+#Special Thanks To
+1. Amirmohammad Ohadi
+ * Who contributed in this project
+2. Dr.Bakhshi
+ * Who learned me C
+3. Dr.Payberah
+ * Who learned me OS
+4. Linus Torvalds
+ * My prophet !!!
