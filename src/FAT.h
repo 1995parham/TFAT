@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 22 Dec 2014 03:35:55 AM IRST
+ * [] Last Modified : Tue 23 Dec 2014 11:51:00 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -99,7 +99,7 @@ void init_fat(int fd);
  * fat_table_bak and
  * root_dir
 */
-void free_fat();
+void free_fat(void);
 
 /*
  * Find next cluster from fat table
@@ -141,6 +141,20 @@ char *get_name(const uint8_t name[]);
  * Get extention in null-terminated string
 */
 char *get_extention(const uint8_t extention[]);
+
+/*
+ * Get attributes in string with following
+ * format :
+ * RHSVDA
+ * ------
+ * R: Read_Only
+ * H: Hidden
+ * S: System
+ * V: Volume_ID
+ * D: Directory
+ * A: Archive
+*/
+char *get_attr(const uint8_t attr);
 
 /*
  * Is directory

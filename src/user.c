@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 22 Dec 2014 03:36:43 AM IRST
+ * [] Last Modified : Wed 24 Dec 2014 12:12:52 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -74,6 +74,7 @@ void list(struct fat_dir_layout *root_dir, int size)
 		if (root_dir[i].file_size && !is_special(root_dir[i].attr)) {
 			char dis_name[255];
 			char dis_time[255];
+			char dis_attr[255];
 
 			char *temp = get_name(root_dir[i].name);
 
@@ -88,14 +89,18 @@ void list(struct fat_dir_layout *root_dir, int size)
 			temp = get_extention(root_dir[i].extention);
 			strcpy(dis_name + strlen(dis_name), temp);
 			free(temp);
+			temp = get_attr(root_dir[i].attr);
+			strcpy(dis_attr, temp);
+			free(temp);
 
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
-			printf("%s %4u %12s %hu\n", dis_time, root_dir[i].file_size, dis_name, root_dir[i].first_cluster);
+			printf("%s %s %4u %12s %hu\n", dis_attr, dis_time, root_dir[i].file_size, dis_name, root_dir[i].first_cluster);
 		}
 		if (is_directory(root_dir[i].attr)) {
 			char dis_name[255];
 			char dis_time[255];
+			char dis_attr[255];
 
 			char *temp = get_name(root_dir[i].name);
 
@@ -105,10 +110,14 @@ void list(struct fat_dir_layout *root_dir, int size)
 			} else {
 				continue;
 			}
+			temp = get_attr(root_dir[i].attr);
+			strcpy(dis_attr, temp);
+			free(temp);
+
 
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
-			printf("%s ---- %12s %hu\n", dis_time, dis_name, root_dir[i].first_cluster);
+			printf("%s %s ---- %12s %hu\n", dis_attr, dis_time, dis_name, root_dir[i].first_cluster);
 		}
 	}
 }
@@ -145,7 +154,8 @@ void ls(const char *dir)
 		}
 
 		list(root_dir, size);
-
+		
+		free(folder);
 		free(root_dir);
 	}
 }
@@ -178,7 +188,7 @@ void hdump(const char *dir)
 			int j = 0;
 
 			for (j = 0; j < size; j++)
-				printf("%02X", buff[j]);
+				printf("%02X ", buff[j]);
 		} else {
 			uint8_t buff[512 * fat_boot.sectors_per_cluster];
 			lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
@@ -187,7 +197,7 @@ void hdump(const char *dir)
 			int j = 0;
 
 			for (j = 0; j < 512 * fat_boot.sectors_per_cluster; j++)
-				printf("%02X", buff[j]);
+				printf("%02X ", buff[j]);
 			size -= 512 * fat_boot.sectors_per_cluster;
 		}
 		cluster = next_cluster(cluster);

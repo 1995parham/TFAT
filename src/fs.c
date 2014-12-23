@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 22 Dec 2014 01:19:20 AM IRST
+ * [] Last Modified : Wed 24 Dec 2014 12:12:11 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -106,6 +106,7 @@ struct fat_dir_layout *find(const char *path)
 	return file;
 error:
 	free(str);
+	free(file);
 	if (dir != root_dir && dir)
 		free(dir);
 	return NULL;

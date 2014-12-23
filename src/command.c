@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 11:15:47 AM IRST
+ * [] Last Modified : Wed 24 Dec 2014 12:22:58 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -78,35 +78,71 @@ void show_command(char c)
 	switch (c) {
 	case 'w':
 		printf("TFAT is a simple interactive fat parser\n");
-		printf("Copyright (C) 2014  Parham Alvani(parham.alvani@gmail.com)\n");
-		printf("This program is free software: you can redistribute it and/or modify\n");
-		printf("it under the terms of the GNU General Public License as published by\n");
-		printf("the Free Software Foundation, either version 3 of the License, or\n");
+
+		printf("Copyright (C) 2014 ");
+		printf("Parham Alvani(parham.alvani@gmail.com)\n");
+
+		printf("This program is free software: ");
+		printf("you can redistribute it and/or modify\n");
+
+		printf("it under the terms of the ");
+		printf("GNU General Public License as published by\n");
+
+		printf("the Free Software Foundation, ");
+		printf("either version 3 of the License, or\n");
+
 		printf("(at your option) any later version.\n");
 
-		printf("This program is distributed in the hope that it will be useful,\n");
-		printf("but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
-		printf("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n");
+		printf("This program is distributed in the hope");
+		printf(" that it will be useful,\n");
+
+		printf("but WITHOUT ANY WARRANTY; ");
+		printf("without even the implied warranty of\n");
+
+		printf("MERCHANTABILITY or FITNESS FOR A ");
+		printf("PARTICULAR PURPOSE.  See the\n");
+
 		printf("GNU General Public License for more details.\n");
 
-		printf("You should have received a copy of the GNU General Public License\n");
-		printf("along with this program.  If not, see <http://www.gnu.org/licenses/>.\n");
+		printf("You should have received a copy of the ");
+		printf("GNU General Public License\n");
+
+		printf("along with this program.  ");
+		printf("If not, see <http://www.gnu.org/licenses/>.\n");
 		break;
 	case 'c':
 		printf("TFAT is a simple interactive fat parser\n");
-		printf("Copyright (C) 2014  Parham Alvani(parham.alvani@gmail.com)\n");
-		printf("This program is free software: you can redistribute it and/or modify\n");
-		printf("it under the terms of the GNU General Public License as published by\n");
-		printf("the Free Software Foundation, either version 3 of the License, or\n");
+
+		printf("Copyright (C) 2014 ");
+		printf("Parham Alvani(parham.alvani@gmail.com)\n");
+
+		printf("This program is free software: ");
+		printf("you can redistribute it and/or modify\n");
+
+		printf("it under the terms of the ");
+		printf("GNU General Public License as published by\n");
+
+		printf("the Free Software Foundation, ");
+		printf("either version 3 of the License, or\n");
+
 		printf("(at your option) any later version.\n");
 
-		printf("This program is distributed in the hope that it will be useful,\n");
-		printf("but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
-		printf("MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n");
+		printf("This program is distributed in the hope");
+		printf(" that it will be useful,\n");
+
+		printf("but WITHOUT ANY WARRANTY; ");
+		printf("without even the implied warranty of\n");
+
+		printf("MERCHANTABILITY or FITNESS FOR A ");
+		printf("PARTICULAR PURPOSE.  See the\n");
+
 		printf("GNU General Public License for more details.\n");
 
-		printf("You should have received a copy of the GNU General Public License\n");
-		printf("along with this program.  If not, see <http://www.gnu.org/licenses/>.\n");
+		printf("You should have received a copy of the ");
+		printf("GNU General Public License\n");
+
+		printf("along with this program.  ");
+		printf("If not, see <http://www.gnu.org/licenses/>.\n");
 		break;
 	}
 }
@@ -117,9 +153,8 @@ void command_dispatcher(const char *command)
 	int len;
 
 	len = sscanf(command, "%s", verb);
-	if (len < 1) {
+	if (len < 1)
 		return;
-	}
 
 	if (!strcmp(verb, "quit")) {
 		quit_command();
