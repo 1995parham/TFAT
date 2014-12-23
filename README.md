@@ -24,12 +24,4 @@ After compiling GNU readline copy libreadline.a & libhistory.a into src folder a
 
 	$ make
 
-#Special Thanks To
-1. Amirmohammad Ohadi
- * Who contributed in this project
-2. Dr.Bakhshi
- * Who learned me C
-3. Dr.Payberah
- * Who learned me OS
-4. Linus Torvalds
- * My prophet !!!
+
