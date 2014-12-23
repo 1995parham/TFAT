@@ -17,4 +17,6 @@ both project available at [GNU READLINE HOMEPAGE](http://cnswww.cns.cwru.edu/php
 
 #Installation
 After compiling GNU readline copy libreadline.a & libhistory.a into src folder and execute following command:
-	$ make
+'''bash
+$ make
+'''
