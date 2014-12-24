@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Wed 24 Dec 2014 12:12:11 AM IRST
+ * [] Last Modified : Thu 25 Dec 2014 12:27:42 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -121,15 +121,15 @@ struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size)
 		return NULL;
 
 	*dir_size = 0;
-	struct fat_dir_layout *entries = malloc(512 * fat_boot.sectors_per_cluster);
+	struct fat_dir_layout *entries = malloc(SECTOR * fat_boot.sectors_per_cluster);
 	int index = 0;
 	fat_addr_t cluster = dir.first_cluster;
 
 	while (cluster) {
-		lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
-		read(fd, entries + index, 512 * fat_boot.sectors_per_cluster);
-		*dir_size += (512 * fat_boot.sectors_per_cluster) / sizeof(struct fat_dir_layout);
-		index += 512 * fat_boot.sectors_per_cluster;
+		lseek(fd, SECTOR * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
+		read(fd, entries + index, SECTOR * fat_boot.sectors_per_cluster);
+		*dir_size += (SECTOR * fat_boot.sectors_per_cluster) / sizeof(struct fat_dir_layout);
+		index += SECTOR * fat_boot.sectors_per_cluster;
 		cluster = next_cluster(cluster);
 	}
 

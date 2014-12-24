@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Wed 24 Dec 2014 12:26:13 AM IRST
+ * [] Last Modified : Thu 25 Dec 2014 12:17:31 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -24,18 +24,32 @@ fat_addr_t *fat_table;
 fat_addr_t *fat_table_bak;
 struct fat_dir_layout *root_dir;
 off_t data_offset;
+fat_addr_t SECTOR;
 
 void init_fat(int fd)
 {
 	read(fd, &fat_boot, 512);
 
+	/*
+	 * Initiate SECTOR size for
+	 * further use
+	*/
+	SECTOR = fat_boot.bytes_per_sector;
+
+	/*
+	 * Seek after reserved sectors
+	 * Please note that we read one
+	 * of them by now
+	*/
+	lseek(fd, fat_boot.reserved_sector_count * SECTOR, SEEK_SET);
+
 	fat_table = malloc(sizeof(fat_addr_t) *
-			256 * fat_boot.table_size_16);
-	read(fd, fat_table, 512 * fat_boot.table_size_16);
+			(SECTOR  / 2) * fat_boot.table_size_16);
+	read(fd, fat_table, SECTOR * fat_boot.table_size_16);
 
 	fat_table_bak = malloc(sizeof(fat_addr_t) *
-			256 * fat_boot.table_size_16);
-	read(fd, fat_table_bak, 512 * fat_boot.table_size_16);
+			(SECTOR / 2) * fat_boot.table_size_16);
+	read(fd, fat_table_bak, SECTOR * fat_boot.table_size_16);
 
 	root_dir = malloc(sizeof(struct fat_dir_layout) *
 			fat_boot.root_entry_count);

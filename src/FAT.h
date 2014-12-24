@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 23 Dec 2014 11:51:00 PM IRST
+ * [] Last Modified : Thu 25 Dec 2014 12:14:58 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -82,6 +82,7 @@ extern fat_addr_t *fat_table;
 extern fat_addr_t *fat_table_bak;
 extern struct fat_dir_layout *root_dir;
 extern off_t data_offset;
+extern fat_addr_t SECTOR;
 
 /* Functions */
 

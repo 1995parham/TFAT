@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Wed 24 Dec 2014 12:12:52 AM IRST
+ * [] Last Modified : Thu 25 Dec 2014 12:24:47 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -39,30 +39,57 @@ void mount(const char *dev)
 
 void info(void)
 {
-	printf("Boot Jump: %2X %2X %2X\n", fat_boot.bootjmp[0], fat_boot.bootjmp[1], fat_boot.bootjmp[2]);
-	printf("OEM Media: %8s\n", fat_boot.oem_name);
-	printf("Media Type: %2X\n", fat_boot.media_type);
-	printf("Bytes Per Sector: %hu\n", fat_boot.bytes_per_sector);
-	printf("Sectors Per Track: %hu\n", fat_boot.sectors_per_track);
-	printf("Sectors Per Cluster: %hu\n", fat_boot.sectors_per_cluster);
-	printf("Root Entry Count: %hu\n", fat_boot.root_entry_count);
-	printf("Reserved Sectors: %hu\n", fat_boot.reserved_sector_count);
-	printf("FAT Tables: %hhu\n", fat_boot.table_count);
-	printf("Table Size: %hu\n", fat_boot.table_size_16);
-	printf("Total Sectors: %hu\n", fat_boot.total_sectors_16);
-	printf("Total Size: %u KB\n", fat_boot.total_sectors_16 * fat_boot.bytes_per_sector / 1024);
+	printf("Boot Jump: %2X %2X %2X\n",
+			fat_boot.bootjmp[0],
+			fat_boot.bootjmp[1],
+			fat_boot.bootjmp[2]);
+
+	printf("OEM Media: %8s\n",
+			fat_boot.oem_name);
+
+	printf("Media Type: %2X\n",
+			fat_boot.media_type);
+
+	printf("Bytes Per Sector: %hu\n",
+			fat_boot.bytes_per_sector);
+
+	printf("Sectors Per Track: %hu\n",
+			fat_boot.sectors_per_track);
+
+	printf("Sectors Per Cluster: %hu\n",
+			fat_boot.sectors_per_cluster);
+
+	printf("Root Entry Count: %hu\n",
+			fat_boot.root_entry_count);
+
+	printf("Reserved Sectors: %hu\n",
+			fat_boot.reserved_sector_count);
+
+	printf("FAT Tables: %hhu\n",
+			fat_boot.table_count);
+
+	printf("Table Size: %hu\n",
+			fat_boot.table_size_16);
+
+	printf("Total Sectors: %hu\n",
+			fat_boot.total_sectors_16);
+
+	printf("Total Size: %u KB\n",
+			fat_boot.total_sectors_16 *
+			fat_boot.bytes_per_sector / 1024);
 
 	fat_addr_t root_cluster = first_data_sector();
 
-	printf("Root Cluster Sector: %hu\n", root_cluster);
-
+	printf("Root Cluster Sector: %hu\n",
+			root_cluster);
 }
 
 /*
  * This is a helper funtion for printing
  * list directory
  *
- * Subdirectory: Indicates that the cluster-chain associated with this entry gets
+ * Subdirectory: Indicates that the cluster-chain
+ * associated with this entry gets
  * interpreted as subdirectory instead of as a file,
  * subdirectories have a filesize entry of zero.
 */
@@ -154,7 +181,7 @@ void ls(const char *dir)
 		}
 
 		list(root_dir, size);
-		
+
 		free(folder);
 		free(root_dir);
 	}
@@ -180,9 +207,9 @@ void hdump(const char *dir)
 	printf("File: %s, Size: %d\n", dir, size);
 	printf("================####====================\n");
 	while (cluster) {
-		if (size < fat_boot.sectors_per_cluster * 512) {
+		if (size < fat_boot.sectors_per_cluster * SECTOR) {
 			uint8_t buff[size];
-			lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
+			lseek(fd, SECTOR * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
 			read(fd, buff, size);
 
 			int j = 0;
@@ -190,15 +217,15 @@ void hdump(const char *dir)
 			for (j = 0; j < size; j++)
 				printf("%02X ", buff[j]);
 		} else {
-			uint8_t buff[512 * fat_boot.sectors_per_cluster];
-			lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
-			read(fd, buff, 512 * fat_boot.sectors_per_cluster);
+			uint8_t buff[SECTOR * fat_boot.sectors_per_cluster];
+			lseek(fd, SECTOR * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
+			read(fd, buff, SECTOR * fat_boot.sectors_per_cluster);
 
 			int j = 0;
 
-			for (j = 0; j < 512 * fat_boot.sectors_per_cluster; j++)
+			for (j = 0; j < SECTOR * fat_boot.sectors_per_cluster; j++)
 				printf("%02X ", buff[j]);
-			size -= 512 * fat_boot.sectors_per_cluster;
+			size -= SECTOR * fat_boot.sectors_per_cluster;
 		}
 		cluster = next_cluster(cluster);
 	}
@@ -214,20 +241,23 @@ void dump(const char *dir)
 		printf("Invalid path\n");
 		return;
 	}
-
 	struct fat_dir_layout *file = find(dir);
+
 	if (file == NULL) {
 		printf("File %s Not Found\n", dir);
 		return;
 	}
 	fat_addr_t cluster = file->first_cluster;
 	unsigned int size = file->file_size;
+
 	printf("File: %s, Size: %d\n", dir, size);
 	printf("================####====================\n");
 	while (cluster) {
-		if (size < fat_boot.sectors_per_cluster * 512) {
+		if (size < fat_boot.sectors_per_cluster * SECTOR) {
 			uint8_t buff[size];
-			lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
+
+			lseek(fd, SECTOR * fat_boot.sectors_per_cluster *
+					(cluster - 2) + data_offset, SEEK_SET);
 			read(fd, buff, size);
 
 			int j = 0;
@@ -235,15 +265,18 @@ void dump(const char *dir)
 			for (j = 0; j < size; j++)
 				printf("%c", buff[j]);
 		} else {
-			uint8_t buff[512 * fat_boot.sectors_per_cluster];
-			lseek(fd, 512 * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
-			read(fd, buff, 512 * fat_boot.sectors_per_cluster);
+			uint8_t buff[SECTOR * fat_boot.sectors_per_cluster];
+
+			lseek(fd, SECTOR * fat_boot.sectors_per_cluster *
+					(cluster - 2) + data_offset, SEEK_SET);
+			read(fd, buff, SECTOR * fat_boot.sectors_per_cluster);
 
 			int j = 0;
 
-			for (j = 0; j < 512 * fat_boot.sectors_per_cluster; j++)
+			for (j = 0; j < SECTOR *
+					fat_boot.sectors_per_cluster; j++)
 				printf("%c", buff[j]);
-			size -= 512 * fat_boot.sectors_per_cluster;
+			size -= SECTOR * fat_boot.sectors_per_cluster;
 		}
 		cluster = next_cluster(cluster);
 	}
@@ -270,7 +303,8 @@ void fat(void)
 		die("Please open valid device first");
 
 	fat_addr_t i = 0;
-	for (i = 0; i < fat_boot.table_size_16 * 256; i++) {
+
+	for (i = 0; i < fat_boot.table_size_16 * (SECTOR / 2); i++) {
 		if (i % 10 == 0) {
 			printf("Do you want to continue ?(Y/n)");
 
@@ -293,7 +327,7 @@ void dump_fat(const char *path)
 
 	if (file <= 0)
 		die("cannot open %s", path);
-	write(file, fat_table, 512 * fat_boot.table_size_16);
+	write(file, fat_table, SECTOR * fat_boot.table_size_16);
 	close(file);
 }
 
