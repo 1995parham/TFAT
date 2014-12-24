@@ -1,0 +1,2 @@
+First of all test program with floppy-1.img, because it is a standard
+floppy disk, after that you must test program with floppy-2.img. 
