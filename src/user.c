@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 25 Dec 2014 12:24:47 AM IRST
+ * [] Last Modified : Thu 25 Dec 2014 01:36:59 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -39,6 +39,8 @@ void mount(const char *dev)
 
 void info(void)
 {
+	TEST_FD();
+
 	printf("Boot Jump: %2X %2X %2X\n",
 			fat_boot.bootjmp[0],
 			fat_boot.bootjmp[1],
@@ -121,6 +123,7 @@ void list(struct fat_dir_layout *root_dir, int size)
 			free(temp);
 
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
+
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
 			printf("%s %s %4u %12s %hu\n", dis_attr, dis_time, root_dir[i].file_size, dis_name, root_dir[i].first_cluster);
 		}
@@ -143,6 +146,7 @@ void list(struct fat_dir_layout *root_dir, int size)
 
 
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
+
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
 			printf("%s %s ---- %12s %hu\n", dis_attr, dis_time, dis_name, root_dir[i].first_cluster);
 		}
@@ -157,8 +161,7 @@ void list(struct fat_dir_layout *root_dir, int size)
 */
 void ls(const char *dir)
 {
-	if (fd == 0)
-		die("Please open valid device first");
+	TEST_FD();
 
 	if (dir[0] != '/') {
 		printf("Invalid path\n");
@@ -189,8 +192,7 @@ void ls(const char *dir)
 
 void hdump(const char *dir)
 {
-	if (fd == 0)
-		die("Please open valid device first");
+	TEST_FD();
 
 	if (dir[0] != '/') {
 		printf("Invalid path\n");
@@ -230,12 +232,12 @@ void hdump(const char *dir)
 		cluster = next_cluster(cluster);
 	}
 	printf("\n========================================\n");
+	free(file);
 }
 
 void dump(const char *dir)
 {
-	if (fd == 0)
-		die("Please open valid device first");
+	TEST_FD();
 
 	if (dir[0] != '/') {
 		printf("Invalid path\n");
@@ -281,12 +283,12 @@ void dump(const char *dir)
 		cluster = next_cluster(cluster);
 	}
 	printf("\n========================================\n");
+	free(file);
 }
 
 void chain(fat_addr_t cluster)
 {
-	if (fd == 0)
-		die("Please open valid device first");
+	TEST_FD();
 
 	while (cluster) {
 		if (next_cluster(cluster) != 0)
@@ -299,8 +301,7 @@ void chain(fat_addr_t cluster)
 
 void fat(void)
 {
-	if (fd == 0)
-		die("Please open valid device first");
+	TEST_FD();
 
 	fat_addr_t i = 0;
 
@@ -320,8 +321,7 @@ void fat(void)
 
 void dump_fat(const char *path)
 {
-	if (fd == 0)
-		die("Please open valid device first");
+	TEST_FD();
 
 	int file = open(path, O_WRONLY | O_CREAT, 0644);
 
@@ -331,10 +331,22 @@ void dump_fat(const char *path)
 	close(file);
 }
 
+void test_fat(void)
+{
+	TEST_FD();
+
+	fat_addr_t i = 0;
+
+	for (i = 0; i < fat_boot.table_size_16 * (SECTOR / 2); i++)
+		if (fat_table[i] != fat_table_bak[i])
+			printf("We have error on entry %d, %hX != %hX", i, fat_table[i], fat_table_bak[i]);
+}
+
 void umount(void)
 {
 	if (fd > 0) {
 		close(fd);
 		free_fat();
+		fd = 0;
 	}
 }

@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 25 Dec 2014 12:17:31 AM IRST
+ * [] Last Modified : Thu 25 Dec 2014 01:13:34 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -50,6 +50,15 @@ void init_fat(int fd)
 	fat_table_bak = malloc(sizeof(fat_addr_t) *
 			(SECTOR / 2) * fat_boot.table_size_16);
 	read(fd, fat_table_bak, SECTOR * fat_boot.table_size_16);
+
+	/*
+	 * We are going to ignore remain
+	 * FAT table !!! ;-)))
+	*/
+	if (fat_boot.table_count > 2)
+		lseek(fd, (fat_boot.table_count - 2) *
+				SECTOR *
+				fat_boot.table_size_16, SEEK_CUR);
 
 	root_dir = malloc(sizeof(struct fat_dir_layout) *
 			fat_boot.root_entry_count);

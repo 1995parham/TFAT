@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Wed 24 Dec 2014 12:22:58 AM IRST
+ * [] Last Modified : Thu 25 Dec 2014 01:38:45 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -33,6 +33,11 @@ void quit_command(void)
 	exit(0);
 }
 
+void umount_command(void)
+{
+	umount();
+}
+
 void mount_command(const char *dev)
 {
 	mount(dev);
@@ -56,6 +61,11 @@ void fat_command(void)
 void dump_fat_command(const char *path)
 {
 	dump_fat(path);
+}
+
+void test_fat_command(void)
+{
+	test_fat();
 }
 
 void dump_command(const char *dir)
@@ -168,6 +178,8 @@ void command_dispatcher(const char *command)
 			return;
 		}
 		mount_command(dev);
+	} else if (!strcmp(verb, "umount")) {
+		umount_command();
 	} else if (!strcmp(verb, "ls")) {
 		char dir[MAX_BUFF];
 		int len;
@@ -232,6 +244,8 @@ void command_dispatcher(const char *command)
 			return;
 		}
 		show_command(c);
+	} else if (!strcmp(verb, "test_fat")) {
+		test_fat_command();
 	} else {
 		printf("404 Not Found\n");
 	}
