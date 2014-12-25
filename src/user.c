@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 25 Dec 2014 01:36:59 AM IRST
+ * [] Last Modified : Thu 25 Dec 2014 05:06:05 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -28,10 +28,15 @@ void mount(const char *dev)
 	fd = open(dev, O_RDONLY);
 
 	if (fd <= 0)
-		die("cannot open %s", dev);
+		die("Cannot open %s", dev);
 
 	init_fat(fd);
 	init_fs(fd);
+
+	if (fat_boot.media_type == 0x00) {
+		free_fat();
+		die("There is nothing on %s", dev);
+	}
 
 	info();
 }
@@ -105,7 +110,8 @@ void list(struct fat_dir_layout *root_dir, int size)
 			char dis_time[255];
 			char dis_attr[255];
 
-			char *temp = get_name(root_dir[i].name);
+			char *temp = get_name(root_dir[i].name,
+					root_dir[i].case_information);
 
 			if (temp) {
 				strcpy(dis_name, temp);
@@ -115,7 +121,8 @@ void list(struct fat_dir_layout *root_dir, int size)
 			}
 			dis_name[strlen(dis_name) + 1] = 0;
 			dis_name[strlen(dis_name)] = '.';
-			temp = get_extention(root_dir[i].extention);
+			temp = get_extention(root_dir[i].extention,
+					root_dir[i].case_information);
 			strcpy(dis_name + strlen(dis_name), temp);
 			free(temp);
 			temp = get_attr(root_dir[i].attr);
@@ -132,7 +139,8 @@ void list(struct fat_dir_layout *root_dir, int size)
 			char dis_time[255];
 			char dis_attr[255];
 
-			char *temp = get_name(root_dir[i].name);
+			char *temp = get_name(root_dir[i].name,
+					root_dir[i].case_information);
 
 			if (temp) {
 				strcpy(dis_name, temp);

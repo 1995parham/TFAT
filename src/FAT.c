@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 25 Dec 2014 01:13:34 AM IRST
+ * [] Last Modified : Thu 25 Dec 2014 05:00:51 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -14,6 +14,7 @@
 #include "common.h"
 
 #include <time.h>
+#include <ctype.h>
 #include <malloc.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -133,7 +134,8 @@ int is_special(const uint8_t attr)
  * 0xE5: The filename has been used, but the file has been deleted
  * 0x05: The first character of filename is actually 0xe5
 */
-char *get_name(const uint8_t name[])
+char *get_name(const uint8_t name[],
+		uint8_t case_information)
 {
 	if (name[0] == 0x00)
 		return NULL;
@@ -144,26 +146,30 @@ char *get_name(const uint8_t name[])
 	if (name[0] == 0xE5)
 		;
 	char *ret_name = malloc(9 * sizeof(char));
+	int lower = case_information & 0x8;
 
 	if (name[0] == 0x05)
 		ret_name[0] = 0xe5;
 	else
-		ret_name[0] = name[0];
+		ret_name[0] = (lower) ? tolower(name[0]) : name[0];
 	int i;
 
 	for (i = 1; i < 8; i++)
-		ret_name[i] = name[i];
+		ret_name[i] = (lower) ? tolower(name[i]) : name[i];
 	ret_name[8] = 0;
 	return rtrim(ret_name);
 }
 
-char *get_extention(const uint8_t extention[])
+char *get_extention(const uint8_t extention[],
+		uint8_t case_information)
 {
 	char *ret_extention = malloc(4 * sizeof(char));
+	int lower = case_information & 0x10;
 	int i;
 
 	for (i = 0; i < 3; i++)
-		ret_extention[i] = extention[i];
+		ret_extention[i] = (lower) ?
+			tolower(extention[i]) : extention[i];
 	ret_extention[3] = 0;
 	return rtrim(ret_extention);
 }

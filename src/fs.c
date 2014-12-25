@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 25 Dec 2014 12:27:42 AM IRST
+ * [] Last Modified : Thu 25 Dec 2014 05:03:54 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -36,7 +36,8 @@ struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char 
 	for (i = 0; i < size; i++) {
 		if (root_dir[i].file_size && !is_special(root_dir[i].attr)) {
 			char dis_name[255];
-			char *temp = get_name(root_dir[i].name);
+			char *temp = get_name(root_dir[i].name,
+					root_dir[i].case_information);
 
 			if (temp) {
 				strcpy(dis_name, temp);
@@ -46,7 +47,8 @@ struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char 
 			}
 			dis_name[strlen(dis_name) + 1] = 0;
 			dis_name[strlen(dis_name)] = '.';
-			temp = get_extention(root_dir[i].extention);
+			temp = get_extention(root_dir[i].extention,
+					root_dir[i].case_information);
 			strcpy(dis_name + strlen(dis_name), temp);
 			free(temp);
 
@@ -55,7 +57,8 @@ struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char 
 		}
 		if (is_directory(root_dir[i].attr)) {
 			char dis_name[255];
-			char *temp = get_name(root_dir[i].name);
+			char *temp = get_name(root_dir[i].name,
+					root_dir[i].case_information);
 
 			if (temp) {
 				strcpy(dis_name, temp);

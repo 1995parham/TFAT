@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 25 Dec 2014 12:14:58 AM IRST
+ * [] Last Modified : Thu 25 Dec 2014 04:54:46 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -52,7 +52,7 @@ struct fat_dir_layout {
 	uint8_t		name[8];
 	uint8_t		extention[3];
 	uint8_t		attr;
-	uint8_t		reserved;
+	uint8_t		case_information;
 	uint8_t		create_second;
 	uint16_t	create_time;
 	uint16_t	create_date;
@@ -70,9 +70,9 @@ struct fat_dir_long_name {
 	uint8_t		attr;		/* Always equals 0x0F */
 	uint8_t		type;
 	uint8_t		checksum;
-	uint16_t	last_name[6];
+	uint16_t	middle_name[6];
 	uint16_t	zero;		/* Why ??? */
-	uint16_t	final_name[2];
+	uint16_t	last_name[2];
 } __attribute__((packed));
 
 /* Public structs and vars */
@@ -135,13 +135,22 @@ fat_addr_t total_clusters(void);
 
 /*
  * Get name in null-terminated string
+ * we use case information string to
+ * convert name characters into correct
+ * case.
+ * VFAT specification use following bit:
+ * bit 4 : lowercase extention
+ * bit 3 : lowercase basename
 */
-char *get_name(const uint8_t name[]);
+char *get_name(const uint8_t name[],
+		uint8_t case_information);
 
 /*
  * Get extention in null-terminated string
+ * we use case information like above
 */
-char *get_extention(const uint8_t extention[]);
+char *get_extention(const uint8_t extention[],
+		uint8_t case_information);
 
 /*
  * Get attributes in string with following
