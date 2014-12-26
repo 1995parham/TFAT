@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 25 Dec 2014 04:54:46 PM IRST
+ * [] Last Modified : Sat 27 Dec 2014 12:54:14 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -62,17 +62,6 @@ struct fat_dir_layout {
 	uint16_t	modification_date;
 	uint16_t	first_cluster;
 	uint32_t	file_size;
-} __attribute__((packed));
-
-struct fat_dir_long_name {
-	uint8_t		order;
-	uint16_t	first_name[5];
-	uint8_t		attr;		/* Always equals 0x0F */
-	uint8_t		type;
-	uint8_t		checksum;
-	uint16_t	middle_name[6];
-	uint16_t	zero;		/* Why ??? */
-	uint16_t	last_name[2];
 } __attribute__((packed));
 
 /* Public structs and vars */
