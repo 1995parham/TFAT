@@ -5,4 +5,4 @@ TODO List
 - [x] Adding path parser.
 - [ ] Adding format and quick format support
 - [x] Change 512 (Sector Size) to generic value
-- [ ] Adding long file name support
+- [x] Adding long file name support
