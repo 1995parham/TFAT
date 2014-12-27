@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sat 27 Dec 2014 12:29:09 PM IRST
+ * [] Last Modified : Sat 27 Dec 2014 12:37:51 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -219,7 +219,7 @@ struct tm create_time(const uint16_t create_time, const uint16_t create_date)
 	/*
 	 * 0b1111111000000000 = 0xFE00
 	*/
-	file_tm.tm_year = ((create_date & 0xFE) >> 9) + 80;
+	file_tm.tm_year = ((create_date & 0xFE00) >> 9) + 80;
 
 	/*
 	 * 0b0000000111100000 = 0x1E0
