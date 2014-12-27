@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 27-12-2014
  *
- * [] Last Modified : Sat 27 Dec 2014 02:26:31 AM IRST
+ * [] Last Modified : Sat 27 Dec 2014 12:28:10 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -13,7 +13,7 @@
 #ifndef _LFN_H
 #define _LFN_H
 
-#include <stdint>
+#include <stdint.h>
 #include "FAT.h"
 
 /*
@@ -29,6 +29,8 @@
 #define LFN_ID_SLOTMASK	0x1F
 
 #define VFAT_LN_ATTR	0x0F
+
+#define CHARS_PER_LFN	13
 
 /*
  * @id: sequence number for slot
@@ -61,15 +63,18 @@ void lfn_reset(void);
 /*
  * Process a dir slot that is a VFAT LFN entry.
 */
-void lfn_add_slot(fat_dir_layout *de, int dir_offset);
+void lfn_add_slot(const struct fat_dir_layout *de, int dir_offset);
 
 /*
  * Retrieve the long name for the proper dir entry.
 */
-char *lfn_get(fat_dir_layout *de, int *lfn_offset);
+char *lfn_get(const struct fat_dir_layout *de, int *lfn_offset);
+
+/*
+ * is LFN (Long File Name)
+*/
+int is_lfn(const uint8_t attr);
 
 void lfn_check_orphaned(void);
-
-void lfn_fix_checksum(loff_t from, loff_t to, const char *short_name);
 
 #endif

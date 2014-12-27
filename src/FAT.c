@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 25 Dec 2014 05:00:51 PM IRST
+ * [] Last Modified : Sat 27 Dec 2014 12:29:09 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -126,6 +126,11 @@ int is_directory(const uint8_t attr)
 int is_special(const uint8_t attr)
 {
 	return attr & 0x08;
+}
+
+int is_deleted(const uint8_t name[])
+{
+	return name[0] == 0xE5;
 }
 
 /*

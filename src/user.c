@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 25 Dec 2014 05:06:05 PM IRST
+ * [] Last Modified : Sat 27 Dec 2014 12:29:51 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -20,6 +20,7 @@
 #include "common.h"
 #include "fs.h"
 #include "user.h"
+#include "lfn.h"
 
 static int fd;
 
@@ -105,10 +106,15 @@ void list(struct fat_dir_layout *root_dir, int size)
 	int i = 0;
 
 	for (i = 0; i < size; i++) {
+		if (is_deleted(root_dir[i].name))
+			continue;
+		if (is_lfn(root_dir[i].attr))
+			lfn_add_slot(&root_dir[i], i);
 		if (root_dir[i].file_size && !is_special(root_dir[i].attr)) {
 			char dis_name[255];
 			char dis_time[255];
 			char dis_attr[255];
+			char dis_full_name[1024];
 
 			char *temp = get_name(root_dir[i].name,
 					root_dir[i].case_information);
@@ -128,16 +134,24 @@ void list(struct fat_dir_layout *root_dir, int size)
 			temp = get_attr(root_dir[i].attr);
 			strcpy(dis_attr, temp);
 			free(temp);
+			int unknown;
+			temp = lfn_get(&root_dir[i], &unknown);
+			if (temp) {
+				strcpy(dis_full_name, temp);
+				free(temp);
+			}
 
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
 
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
-			printf("%s %s %4u %12s %hu\n", dis_attr, dis_time, root_dir[i].file_size, dis_name, root_dir[i].first_cluster);
+			printf("%s %s %4u %12s %4hX %s\n", dis_attr, dis_time, root_dir[i].file_size, dis_name,
+					root_dir[i].first_cluster, dis_full_name);
 		}
 		if (is_directory(root_dir[i].attr)) {
 			char dis_name[255];
 			char dis_time[255];
 			char dis_attr[255];
+			char dis_full_name[1024];
 
 			char *temp = get_name(root_dir[i].name,
 					root_dir[i].case_information);
@@ -151,12 +165,19 @@ void list(struct fat_dir_layout *root_dir, int size)
 			temp = get_attr(root_dir[i].attr);
 			strcpy(dis_attr, temp);
 			free(temp);
+			int unknown;
+			temp = lfn_get(&root_dir[i], &unknown);
+			if (temp) {
+				strcpy(dis_full_name, temp);
+				free(temp);
+			}
 
 
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
 
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
-			printf("%s %s ---- %12s %hu\n", dis_attr, dis_time, dis_name, root_dir[i].first_cluster);
+			printf("%s %s ---- %12s %4hX %s\n", dis_attr, dis_time, dis_name,
+					root_dir[i].first_cluster, dis_full_name);
 		}
 	}
 }
@@ -348,6 +369,28 @@ void test_fat(void)
 	for (i = 0; i < fat_boot.table_size_16 * (SECTOR / 2); i++)
 		if (fat_table[i] != fat_table_bak[i])
 			printf("We have error on entry %d, %hX != %hX", i, fat_table[i], fat_table_bak[i]);
+}
+
+void lls(void)
+{
+	TEST_FD();
+	int index = 0;
+
+	while (1) {
+		if (index >= fat_boot.root_entry_count)
+			break;
+		while (is_lfn(root_dir[index].attr)) {
+			lfn_add_slot(&root_dir[index], index);
+			index++;
+		}
+		int unknown;
+		char* name;
+
+		name = lfn_get(&root_dir[index], &unknown);
+		if(name)
+			printf("%s\n", name);
+		index++;
+	}
 }
 
 void umount(void)

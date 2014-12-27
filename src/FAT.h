@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sat 27 Dec 2014 12:54:14 AM IRST
+ * [] Last Modified : Sat 27 Dec 2014 12:29:17 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -166,6 +166,12 @@ int is_directory(const uint8_t attr);
  * as OSDev say it contains VOLUME_ID
 */
 int is_special(const uint8_t attr);
+
+/*
+ * Is deleted
+ * name[0] == 0xE5 Ok ?
+*/
+int is_deleted(const uint8_t name[]);
 
 /*
  * Get create timestamp
