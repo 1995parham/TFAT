@@ -16,7 +16,7 @@
 unsigned char *lfn_unicode = NULL;
 unsigned char lfn_checksum;
 int lfn_slot = -1;
-loff_t *lfn_offsets = NULL;
+int *lfn_offsets = NULL;
 int lfn_parts = 0;
 
 static unsigned char fat_uni2esc[64] = {

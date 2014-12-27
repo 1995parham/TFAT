@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sat 27 Dec 2014 12:29:51 PM IRST
+ * [] Last Modified : Sat 27 Dec 2014 12:44:57 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -114,7 +114,7 @@ void list(struct fat_dir_layout *root_dir, int size)
 			char dis_name[255];
 			char dis_time[255];
 			char dis_attr[255];
-			char dis_full_name[1024];
+			char dis_full_name[1024] = "";
 
 			char *temp = get_name(root_dir[i].name,
 					root_dir[i].case_information);
@@ -151,7 +151,7 @@ void list(struct fat_dir_layout *root_dir, int size)
 			char dis_name[255];
 			char dis_time[255];
 			char dis_attr[255];
-			char dis_full_name[1024];
+			char dis_full_name[1024] = "";
 
 			char *temp = get_name(root_dir[i].name,
 					root_dir[i].case_information);
@@ -369,28 +369,6 @@ void test_fat(void)
 	for (i = 0; i < fat_boot.table_size_16 * (SECTOR / 2); i++)
 		if (fat_table[i] != fat_table_bak[i])
 			printf("We have error on entry %d, %hX != %hX", i, fat_table[i], fat_table_bak[i]);
-}
-
-void lls(void)
-{
-	TEST_FD();
-	int index = 0;
-
-	while (1) {
-		if (index >= fat_boot.root_entry_count)
-			break;
-		while (is_lfn(root_dir[index].attr)) {
-			lfn_add_slot(&root_dir[index], index);
-			index++;
-		}
-		int unknown;
-		char* name;
-
-		name = lfn_get(&root_dir[index], &unknown);
-		if(name)
-			printf("%s\n", name);
-		index++;
-	}
 }
 
 void umount(void)

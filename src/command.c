@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sat 27 Dec 2014 11:23:39 AM IRST
+ * [] Last Modified : Sat 27 Dec 2014 12:41:09 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -81,11 +81,6 @@ void hdump_command(const char *dir)
 void info_command(void)
 {
 	info();
-}
-
-void lls_command()
-{
-	lls();
 }
 
 void show_command(char c)
@@ -251,8 +246,6 @@ void command_dispatcher(const char *command)
 		show_command(c);
 	} else if (!strcmp(verb, "test_fat")) {
 		test_fat_command();
-	} else if (!strcmp(verb, "lls")) {
-		lls_command();
 	} else {
 		printf("404 Not Found\n");
 	}
