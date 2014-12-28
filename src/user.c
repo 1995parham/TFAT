@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sat 27 Dec 2014 12:44:57 PM IRST
+ * [] Last Modified : Sun 28 Dec 2014 05:54:45 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -24,19 +24,22 @@
 
 static int fd;
 
-void mount(const char *dev)
+void mount(const char *dev, int wflag)
 {
-	fd = open(dev, O_RDONLY);
+	if(wflag)
+		fd = open(dev, O_RDWR);
+	else
+		fd = open(dev, O_RDONLY);
 
 	if (fd <= 0)
-		die("Cannot open %s", dev);
+		sdie("Cannot open %s", dev);
 
 	init_fat(fd);
 	init_fs(fd);
 
 	if (fat_boot.media_type == 0x00) {
 		free_fat();
-		die("There is nothing on %s", dev);
+		udie("There is nothing on %s", dev);
 	}
 
 	info();
@@ -355,7 +358,7 @@ void dump_fat(const char *path)
 	int file = open(path, O_WRONLY | O_CREAT, 0644);
 
 	if (file <= 0)
-		die("cannot open %s", path);
+		sdie("cannot open %s", path);
 	write(file, fat_table, SECTOR * fat_boot.table_size_16);
 	close(file);
 }

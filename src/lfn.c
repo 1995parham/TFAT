@@ -159,7 +159,7 @@ void lfn_add_slot(const struct fat_dir_layout *de, int dir_offset)
 	if (lfn_slot == 0)
 		lfn_check_orphaned();
 	if (de->attr != VFAT_LN_ATTR)
-		die("lfn_add_slot called with non-LFN directory entry");
+		udie("lfn_add_slot called with non-LFN directory entry");
 	if (lfn->id & LFN_ID_START && slot != 0) {
 		lfn_slot = slot;
 		lfn_checksum = lfn->alias_checksum;
@@ -187,7 +187,7 @@ char *lfn_get(const struct fat_dir_layout *de, int *lfn_offset)
 
 	*lfn_offset = 0;
 	if (de->attr == VFAT_LN_ATTR)
-		die("lfn_get called with LFN directory entry");
+		udie("lfn_get called with LFN directory entry");
 
 	if (lfn_slot == -1)
 		/* no long name for this file */

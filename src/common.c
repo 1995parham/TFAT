@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 22 Dec 2014 01:06:31 AM IRST
+ * [] Last Modified : Sun 28 Dec 2014 05:52:47 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -32,7 +32,7 @@ char *rtrim(char *string)
 	return string;
 }
 
-void die(const char *fmt, ...)
+void sdie(const char *fmt, ...)
 {
 	char buf[MAX_BUFF];
 	va_list args;
@@ -42,5 +42,22 @@ void die(const char *fmt, ...)
 	va_end(args);
 
 	perror(buf);
+	exit(EXIT_FAILURE);
+}
+
+void udie(const char *fmt, ...)
+{
+	char buf[MAX_BUFF];
+	va_list args;
+
+	va_start(args, fmt);
+	vsprintf(buf, fmt, args);
+	va_end(args);
+	
+	int len = strlen(buf);
+	buf[len] = '\n';
+	buf[len + 1] = 0;
+
+	fputs(buf, stderr);
 	exit(EXIT_FAILURE);
 }

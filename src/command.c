@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sat 27 Dec 2014 12:41:09 PM IRST
+ * [] Last Modified : Sun 28 Dec 2014 05:58:25 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -40,7 +40,12 @@ void umount_command(void)
 
 void mount_command(const char *dev)
 {
-	mount(dev);
+	mount(dev, 0);
+}
+
+void wmount_command(const char *dev)
+{
+	mount(dev, 1);
 }
 
 void ls_command(const char *dir)
@@ -178,6 +183,16 @@ void command_dispatcher(const char *command)
 			return;
 		}
 		mount_command(dev);
+	} else if (!strcmp(verb, "wmount")) {
+		char dev[MAX_BUFF];
+		int len = 0;
+
+		len = sscanf(command, "%s %s", verb, dev);
+		if (len < 2) {
+			printf("wmount mount-device\n");
+			return;
+		}
+		wmount_command(dev);
 	} else if (!strcmp(verb, "umount")) {
 		umount_command();
 	} else if (!strcmp(verb, "ls")) {

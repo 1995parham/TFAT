@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sat 27 Dec 2014 12:40:51 PM IRST
+ * [] Last Modified : Sun 28 Dec 2014 05:54:24 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -18,10 +18,17 @@
 #define TEST_FD()						\
 	do {							\
 		if (fd <= 0)					\
-			die("Please open valid device first");	\
+			udie("Please open valid device first");	\
 	} while (0)						\
 
-void mount(const char *dev);
+#define TEST_W_FD()							\
+	do {								\
+		if (!(fcntl(fd, F_GETFL) & O_RDWR))			\
+			udie("Please open device with write permission");\
+	} while (0)							\
+
+
+void mount(const char *dev, int wflag);
 
 void info(void);
 
