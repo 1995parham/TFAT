@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sat 27 Dec 2014 12:29:17 PM IRST
+ * [] Last Modified : Mon 29 Dec 2014 02:41:42 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -97,6 +97,12 @@ void free_fat(void);
 fat_addr_t next_cluster(fat_addr_t index);
 
 /*
+ * Change cluster numbered index in fat table
+ * into new_value
+*/
+void change_cluster(fat_addr_t index, fat_addr_t new_value);
+
+/*
  * The first in the File Allocation Table
 */
 fat_addr_t first_fat_sector(void);
@@ -177,5 +183,13 @@ int is_deleted(const uint8_t name[]);
  * Get create timestamp
 */
 struct tm create_time(const uint16_t create_time, const uint16_t create_date);
+
+/*
+ * Set change in backup fat table
+ * and write them into disk again.
+ *
+ * [EXPERIMENTAL]
+*/
+void write_fat(int fd);
 
 #endif

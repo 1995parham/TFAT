@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 22 Dec 2014 12:06:12 AM IRST
+ * [] Last Modified : Sun 28 Dec 2014 08:39:50 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -17,7 +17,6 @@
 
 /*
  * Set file descriptor for fs handler
- * TODO create tree for directories
 */
 void init_fs(int dev);
 

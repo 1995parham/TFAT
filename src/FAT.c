@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sat 27 Dec 2014 12:37:51 PM IRST
+ * [] Last Modified : Mon 29 Dec 2014 02:43:24 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -15,9 +15,10 @@
 
 #include <time.h>
 #include <ctype.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <memory.h>
 
 
 struct fat_BS fat_boot;
@@ -81,6 +82,11 @@ fat_addr_t next_cluster(fat_addr_t index)
 	if ((fat_table[index] & 0xF000) == 0xF000)
 		return 0x0000;
 	return fat_table[index];
+}
+
+void change_cluster(fat_addr_t index, fat_addr_t new_value)
+{
+	fat_table[index] = new_value;
 }
 
 fat_addr_t root_dir_sectors(void)
@@ -246,4 +252,20 @@ struct tm create_time(const uint16_t create_time, const uint16_t create_date)
 	*/
 	file_tm.tm_sec  = (create_time & 0x1F) * 2;
 	return file_tm;
+}
+
+void write_fat(int fd)
+{
+	memcpy(fat_table_bak, fat_table, SECTOR * fat_boot.table_size_16);
+
+	/*
+	 * Write fat_table value into all fat table
+	 * available on disk
+	*/
+	lseek(fd, fat_boot.reserved_sector_count * SECTOR, SEEK_SET);
+
+	int i;
+
+	for (i = 0; i < fat_boot.table_count; i++)
+		write(fd, fat_table, fat_boot.table_size_16 * SECTOR);
 }

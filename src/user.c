@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 28 Dec 2014 05:54:45 AM IRST
+ * [] Last Modified : Mon 29 Dec 2014 02:47:30 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -26,7 +26,7 @@ static int fd;
 
 void mount(const char *dev, int wflag)
 {
-	if(wflag)
+	if (wflag)
 		fd = open(dev, O_RDWR);
 	else
 		fd = open(dev, O_RDONLY);
@@ -372,6 +372,32 @@ void test_fat(void)
 	for (i = 0; i < fat_boot.table_size_16 * (SECTOR / 2); i++)
 		if (fat_table[i] != fat_table_bak[i])
 			printf("We have error on entry %d, %hX != %hX", i, fat_table[i], fat_table_bak[i]);
+}
+
+void delete(const char *dir)
+{
+	TEST_FD();
+	TEST_W_FD();
+
+	if (dir[0] != '/') {
+		printf("Invalid path\n");
+		return;
+	}
+	struct fat_dir_layout *file = find(dir);
+
+	if (file == NULL) {
+		printf("File %s Not Found\n", dir);
+		return;
+	}
+	fat_addr_t cluster = file->first_cluster;
+
+	while (cluster) {
+		fat_addr_t cluster_bak = cluster;
+		cluster = next_cluster(cluster);
+		printf("Make cluster number %hu zero", cluster_bak);
+		change_cluster(cluster_bak, 0x0000);
+	}
+	free(file);
 }
 
 void umount(void)

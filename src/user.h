@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 28 Dec 2014 05:54:24 AM IRST
+ * [] Last Modified : Mon 29 Dec 2014 02:46:59 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -45,6 +45,8 @@ void test_fat(void);
 void hdump(const char *dir);
 
 void dump(const char *dir);
+
+void delete(const char *dir);
 
 void umount(void);
 
