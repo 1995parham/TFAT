@@ -53,7 +53,7 @@ void udie(const char *fmt, ...)
 	va_start(args, fmt);
 	vsprintf(buf, fmt, args);
 	va_end(args);
-	
+
 	int len = strlen(buf);
 	buf[len] = '\n';
 	buf[len + 1] = 0;
