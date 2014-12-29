@@ -5,12 +5,13 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 11:34:27 AM IRST
+ * [] Last Modified : Mon 29 Dec 2014 07:25:26 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
 */
 #include <stdio.h>
+#include <unistd.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +36,7 @@ int main(int argc, char *argv[])
 	change_current_path("-");
 
 	while (true) {
-		sprintf(prompt, "TFAT> [%s] ", current_path);
+		sprintf(prompt, "%s@TFAT [%s] $ ", getlogin(), current_path);
 		command = readline(prompt);
 		if (command && *command)
 			add_history(command);

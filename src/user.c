@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 11:53:29 AM IRST
+ * [] Last Modified : Mon 29 Dec 2014 07:58:02 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -195,13 +195,64 @@ void list(struct fat_dir_layout *root_dir, int size)
 */
 char *address_convertor(const char *path)
 {
-	int len = strlen(current_path) + strlen(path) + 1;
-	char *ret = malloc(len * sizeof(char));
+	int len = 0;
+	char *ret = NULL;
+	if (!path) {
+		len = strlen(current_path) + 1;
+		ret = malloc(len * sizeof(char));
 
-	strcpy(ret, current_path);
-	strcat(ret, path);
+		strcpy(ret, current_path);
+	} else if (path[0] != '/') {
+		/* We want add / at end if necessary */
+		len = strlen(current_path) + strlen(path) + 2;
+		ret = malloc(len * sizeof(char));
+
+		strcpy(ret, current_path);
+		strcat(ret, path);
+
+		if (ret[strlen(ret) - 1] != '/') {
+			ret[strlen(ret) + 1] = 0;
+			ret[strlen(ret)] = '/';
+		}
+	} else {
+		/* We want add / at end if necessary */
+		len = strlen(path) + 2;
+		ret = malloc(len * sizeof(char));
+
+		strcpy(ret, path);
+		
+		if (ret[strlen(ret) - 1] != '/') {
+			ret[strlen(ret) + 1] = 0;
+			ret[strlen(ret)] = '/';
+		}
+	}
 
 	return ret;
+}
+
+void cd(const char *path)
+{
+	struct fat_dir_layout *dir;
+	char *npath = NULL;
+	
+	npath = address_convertor(path);
+	dir = find(npath);
+	
+	if (dir == NULL) {
+		printf("Folder %s Not Found\n", npath);
+		free(npath);
+		return;
+	}
+	if (!is_directory(dir->attr)) {
+		printf("%s is Not Directory\n", npath);
+		free(npath);
+		free(dir);
+		return;
+	}
+	change_current_path(npath);
+
+	free(dir);
+	free(npath);
 }
 
 /*
@@ -213,22 +264,26 @@ char *address_convertor(const char *path)
 void ls(const char *dir)
 {
 	TEST_FD();
+	
+	char *ndir = NULL;
 
-	if (dir[0] != '/')
-		dir = address_convertor(dir);
+	ndir = address_convertor(dir);
 
-	if (!strcmp(dir, "/")) {
+	if (!strcmp(ndir, "/")) {
 		list(root_dir, fat_boot.root_entry_count);
 	} else {
 		int size;
-		struct fat_dir_layout *folder = find(dir);
+		struct fat_dir_layout *folder = find(ndir);
 		if (folder == NULL) {
-			printf("Folder %s Not Found\n", dir);
+			printf("Folder %s Not Found\n", ndir);
+			free(ndir);
 			return;
 		}
 		struct fat_dir_layout *root_dir = parse_dir(*folder, &size);
 		if (root_dir == NULL) {
-			printf("Folder %s Not Found\n", dir);
+			printf("Folder %s Not Found\n", ndir);
+			free(folder);
+			free(ndir);
 			return;
 		}
 
@@ -238,26 +293,26 @@ void ls(const char *dir)
 		free(root_dir);
 	}
 
-	free(dir);
+	free(ndir);
 }
 
 void hdump(const char *dir)
 {
 	TEST_FD();
 
-	if (dir[0] != '/') {
-		printf("Invalid path\n");
-		return;
-	}
+	char *ndir = NULL;
 
-	struct fat_dir_layout *file = find(dir);
+	ndir = address_convertor(dir);
+
+	struct fat_dir_layout *file = find(ndir);
 	if (file == NULL) {
-		printf("File %s Not Found\n", dir);
+		printf("File %s Not Found\n", ndir);
+		free(ndir);
 		return;
 	}
 	fat_addr_t cluster = file->first_cluster;
 	unsigned int size = file->file_size;
-	printf("File: %s, Size: %d\n", dir, size);
+	printf("File: %s, Size: %d\n", ndir, size);
 	printf("================####====================\n");
 	while (cluster) {
 		if (size < fat_boot.sectors_per_cluster * SECTOR) {
@@ -284,26 +339,28 @@ void hdump(const char *dir)
 	}
 	printf("\n========================================\n");
 	free(file);
+	free(ndir);
 }
 
 void dump(const char *dir)
 {
 	TEST_FD();
+	
+	char *ndir = NULL;
+	
+	ndir = address_convertor(dir);
 
-	if (dir[0] != '/') {
-		printf("Invalid path\n");
-		return;
-	}
-	struct fat_dir_layout *file = find(dir);
+	struct fat_dir_layout *file = find(ndir);
 
 	if (file == NULL) {
-		printf("File %s Not Found\n", dir);
+		printf("File %s Not Found\n", ndir);
+		free(ndir);
 		return;
 	}
 	fat_addr_t cluster = file->first_cluster;
 	unsigned int size = file->file_size;
 
-	printf("File: %s, Size: %d\n", dir, size);
+	printf("File: %s, Size: %d\n", ndir, size);
 	printf("================####====================\n");
 	while (cluster) {
 		if (size < fat_boot.sectors_per_cluster * SECTOR) {
@@ -335,6 +392,7 @@ void dump(const char *dir)
 	}
 	printf("\n========================================\n");
 	free(file);
+	free(ndir);
 }
 
 void chain(fat_addr_t cluster)
@@ -424,6 +482,7 @@ void umount(void)
 	if (fd > 0) {
 		close(fd);
 		free_fat();
+		free(current_path);
 		fd = 0;
 	}
 }

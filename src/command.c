@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 11:36:50 AM IRST
+ * [] Last Modified : Mon 29 Dec 2014 07:54:40 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -46,6 +46,11 @@ void mount_command(const char *dev)
 void wmount_command(const char *dev)
 {
 	mount(dev, 1);
+}
+
+void cd_command(const char *path)
+{
+	cd(path);
 }
 
 void ls_command(const char *dir)
@@ -200,13 +205,22 @@ void command_dispatcher(const char *command)
 		wmount_command(dev);
 	} else if (!strcmp(verb, "umount")) {
 		umount_command();
+	} else if (!strcmp(verb, "cd")) {
+		char path[MAX_BUFF];
+		int len;
+
+		len = sscanf(command, "%s %s", verb, path);
+		if (len < 2) {
+			return;
+		}
+		cd_command(path);
 	} else if (!strcmp(verb, "ls")) {
 		char dir[MAX_BUFF];
 		int len;
 
 		len = sscanf(command, "%s %s", verb, dir);
 		if (len < 2) {
-			printf("ls directory\n");
+			ls_command(NULL);
 			return;
 		}
 		ls_command(dir);

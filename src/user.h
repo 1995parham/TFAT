@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 02:46:59 AM IRST
+ * [] Last Modified : Mon 29 Dec 2014 07:52:04 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -31,6 +31,8 @@
 void mount(const char *dev, int wflag);
 
 void info(void);
+
+void cd(const char *path);
 
 void ls(const char *dir);
 
