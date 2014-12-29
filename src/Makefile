@@ -1,4 +1,4 @@
-OBJ=main.o FAT.o user.o common.o command.o fs.o lfn.o
+OBJ=main.o FAT.o user.o common.o command.o fs.o lfn.o cd.o
 LIB=-ltermcap
 SLIB=libreadline.a libhistory.a
 CFLAGS=-gstabs+ -Wall -Iinclude
@@ -19,6 +19,8 @@ fs.o: fs.h fs.c FAT.h
 	gcc $(CFLAGS) -c fs.c
 lfn.o: lfn.c lfn.h FAT.h common.h
 	gcc $(CFLAGS) -c lfn.c
+cd.o: cd.h cd.c
+	gcc $(CFLAGS) -c cd.c
 .PHONY: clean
 clean:
 	rm $(OBJ) FAT.out

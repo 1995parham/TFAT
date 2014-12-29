@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 21 Dec 2014 02:13:50 AM IRST
+ * [] Last Modified : Mon 29 Dec 2014 11:34:27 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -18,6 +18,8 @@
 #include <readline/history.h>
 
 #include "command.h"
+#include "common.h"
+#include "cd.h"
 
 int main(int argc, char *argv[])
 {
@@ -28,9 +30,13 @@ int main(int argc, char *argv[])
 	printf("\n");
 
 	char *command;
+	char prompt[MAX_BUFF];
+
+	change_current_path("-");
 
 	while (true) {
-		command = readline("TFAT> ");
+		sprintf(prompt, "TFAT> [%s] ", current_path);
+		command = readline(prompt);
 		if (command && *command)
 			add_history(command);
 		command_dispatcher(command);

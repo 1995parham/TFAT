@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 02:47:30 AM IRST
+ * [] Last Modified : Mon 29 Dec 2014 11:53:29 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -21,6 +21,7 @@
 #include "fs.h"
 #include "user.h"
 #include "lfn.h"
+#include "cd.h"
 
 static int fd;
 
@@ -43,6 +44,8 @@ void mount(const char *dev, int wflag)
 	}
 
 	info();
+
+	change_current_path("/");
 }
 
 
@@ -186,6 +189,22 @@ void list(struct fat_dir_layout *root_dir, int size)
 }
 
 /*
+ * This is a helper function
+ * for coverting relative address
+ * to complete address
+*/
+char *address_convertor(const char *path)
+{
+	int len = strlen(current_path) + strlen(path) + 1;
+	char *ret = malloc(len * sizeof(char));
+
+	strcpy(ret, current_path);
+	strcat(ret, path);
+
+	return ret;
+}
+
+/*
  * First if our dir == '/',
  * we need to list root_dir
  * so we cannot use our find
@@ -195,10 +214,8 @@ void ls(const char *dir)
 {
 	TEST_FD();
 
-	if (dir[0] != '/') {
-		printf("Invalid path\n");
-		return;
-	}
+	if (dir[0] != '/')
+		dir = address_convertor(dir);
 
 	if (!strcmp(dir, "/")) {
 		list(root_dir, fat_boot.root_entry_count);
@@ -220,6 +237,8 @@ void ls(const char *dir)
 		free(folder);
 		free(root_dir);
 	}
+
+	free(dir);
 }
 
 void hdump(const char *dir)
