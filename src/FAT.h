@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 08:10:59 PM IRST
+ * [] Last Modified : Tue 30 Dec 2014 08:32:33 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -67,7 +67,10 @@ struct fat_dir_layout {
 /*
  * Clusters status code constant
 */
-
+#define FREE_CLUSTER 0x0000
+#define LAST_CLUSTER 0xFFFF
+#define RES1_CLUSTER 0x0001
+#define BADC_CLUSTER 0xFFF7
 
 /* Public structs and vars */
 
