@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 07:25:26 PM IRST
+ * [] Last Modified : Wed 31 Dec 2014 12:54:34 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -21,6 +21,7 @@
 #include "command.h"
 #include "common.h"
 #include "cd.h"
+#include "label.h"
 
 int main(int argc, char *argv[])
 {
@@ -34,9 +35,10 @@ int main(int argc, char *argv[])
 	char prompt[MAX_BUFF];
 
 	change_current_path("-");
+	change_label("NOTHING");
 
 	while (true) {
-		sprintf(prompt, "%s@TFAT [%s] $ ", getlogin(), current_path);
+		sprintf(prompt, "%s@TFAT {%s} [%s] $ ", getlogin(), label, current_path);
 		command = readline(prompt);
 		if (command && *command)
 			add_history(command);

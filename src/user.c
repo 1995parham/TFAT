@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 08:10:05 PM IRST
+ * [] Last Modified : Wed 31 Dec 2014 12:52:21 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -22,6 +22,7 @@
 #include "user.h"
 #include "lfn.h"
 #include "cd.h"
+#include "label.h"
 
 static int fd;
 
@@ -46,6 +47,12 @@ void mount(const char *dev, int wflag)
 	info();
 
 	change_current_path("/");
+
+	char *new_label = get_label();
+
+	change_label(new_label);
+	if (new_label)
+		free(new_label);
 }
 
 
@@ -177,7 +184,7 @@ void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 			temp = get_attr(root_dir[i].attr);
 			strcpy(dis_attr, temp);
 			free(temp);
-			
+
 			int unknown;
 
 			temp = lfn_get(&root_dir[i], &unknown);
@@ -540,7 +547,7 @@ void delete(const char *dir)
 }
 
 void undelete(const char *dir)
-{	
+{
 	TEST_FD();
 	TEST_W_FD();
 
@@ -570,7 +577,7 @@ void undelete(const char *dir)
 		return;
 	}
 	fat_addr_t cluster = file->first_cluster;
-	
+
 	printf("Make cluster number %hu unzero\n", cluster);
 	change_cluster(cluster, 0xFFFF);
 
@@ -601,7 +608,8 @@ void umount(void)
 			write_fat(fd);
 		close(fd);
 		free_fat();
-		free(current_path);
+		change_current_path("-");
+		change_label("NOTHING");
 		fd = 0;
 	}
 }

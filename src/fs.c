@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 08:04:38 PM IRST
+ * [] Last Modified : Wed 31 Dec 2014 01:05:02 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -154,6 +154,26 @@ char *fix_deleted_char(const char *path, char *c)
 	}
 
 	return ret;
+}
+
+char *get_label(void)
+{
+	int i = 0;
+
+	for (i = 0; i < fat_boot.root_entry_count; i++) {
+		if (is_special(root_dir[i].attr)) {
+			char *temp = get_name(root_dir[i].name,
+					root_dir[i].case_information);
+
+			if (temp) {
+				return temp;
+			} else {
+				continue;
+			}
+		}
+	}
+	return NULL;
+
 }
 
 /*

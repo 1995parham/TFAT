@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 08:13:32 PM IRST
+ * [] Last Modified : Wed 31 Dec 2014 12:45:40 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -18,6 +18,8 @@
 #include "user.h"
 #include "command.h"
 #include "common.h"
+#include "cd.h"
+#include "label.h"
 
 /*
  * Commands in this program have the following foramt
@@ -30,6 +32,8 @@
 void quit_command(void)
 {
 	umount();
+	free(current_path);
+	free(label);
 	exit(0);
 }
 

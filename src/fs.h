@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 08:03:22 PM IRST
+ * [] Last Modified : Wed 31 Dec 2014 12:47:48 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -50,6 +50,12 @@ char *get_parent_path(const char *path);
  * it changed.
 */
 char *fix_deleted_char(const char *path, char *c);
+
+/*
+ * Read disk label and store it on string and
+ * return it's address
+*/
+char *get_label(void);
 
 /*
  * Parse directory and set dir_size to entry number and
