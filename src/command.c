@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 06:12:30 PM IRST
+ * [] Last Modified : Tue 30 Dec 2014 08:13:32 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -96,6 +96,11 @@ void hdump_command(const char *dir)
 void delete_command(const char *dir)
 {
 	delete(dir);
+}
+
+void undelete_command(const char *dir)
+{
+	undelete(dir);
 }
 
 void info_command(void)
@@ -291,6 +296,17 @@ void command_dispatcher(const char *command)
 			return;
 		}
 		delete_command(dir);
+	} else if (!strcmp(verb, "undelete")) {
+		char dir[MAX_BUFF];
+		int len;
+
+		len = sscanf(command, "%s %s", verb, dir);
+		if (len < 2) {
+			printf("undelete file-name");
+			return;
+		}
+		undelete_command(dir);
+
 	} else if (!strcmp(verb, "info")) {
 		info_command();
 	} else if (!strcmp(verb, "show")) {

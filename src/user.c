@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 06:21:57 PM IRST
+ * [] Last Modified : Tue 30 Dec 2014 08:10:05 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -528,6 +528,61 @@ void delete(const char *dir)
 				write_dir(*parent_file, folder, size);
 			} else {
 				folder[i].name[0] = 0xE5;
+			}
+		}
+	}
+
+	if (parent_file) {
+		free(folder);
+		free(parent_file);
+	}
+	free(file);
+}
+
+void undelete(const char *dir)
+{	
+	TEST_FD();
+	TEST_W_FD();
+
+	char deleted_char;
+	char *ddir = fix_deleted_char(dir, &deleted_char);
+	char *ndir = address_convertor(ddir);
+	char *pndir = get_parent_path(ndir);
+
+	int size = 0;
+	struct fat_dir_layout *folder = NULL;
+	struct fat_dir_layout *file = find(ndir);
+	struct fat_dir_layout *parent_file = NULL;
+
+	if (strcmp(pndir, "/")) {
+		parent_file = find(pndir);
+		folder = parse_dir(*parent_file, &size);
+	} else {
+		folder = root_dir;
+		size = fat_boot.root_entry_count;
+	}
+	free(ddir);
+	free(ndir);
+	free(pndir);
+
+	if (file == NULL) {
+		printf("File %s Not Found\n", dir);
+		return;
+	}
+	fat_addr_t cluster = file->first_cluster;
+	
+	printf("Make cluster number %hu unzero\n", cluster);
+	change_cluster(cluster, 0xFFFF);
+
+	int i = 0;
+
+	for (i = 0; i < size; i++) {
+		if (!memcmp(&folder[i], file, sizeof(struct fat_dir_layout))) {
+			if (parent_file) {
+				folder[i].name[0] = deleted_char;
+				write_dir(*parent_file, folder, size);
+			} else {
+				folder[i].name[0] = deleted_char;
 			}
 		}
 	}

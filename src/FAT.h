@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 06:00:22 PM IRST
+ * [] Last Modified : Tue 30 Dec 2014 08:10:59 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -63,6 +63,11 @@ struct fat_dir_layout {
 	uint16_t	first_cluster;
 	uint32_t	file_size;
 } __attribute__((packed));
+
+/*
+ * Clusters status code constant
+*/
+
 
 /* Public structs and vars */
 

@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 06:01:10 PM IRST
+ * [] Last Modified : Tue 30 Dec 2014 08:03:22 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -37,10 +37,19 @@ struct fat_dir_layout *find(const char *path);
 
 /*
  * Returne parent path for
- * given path for example
+ * given path, for example
  * $$$/A/B ==> $$$/A/
 */
 char *get_parent_path(const char *path);
+
+/*
+ * Change first character after last '/'
+ * to 0xE5 because user cannot enter 0xE5 !!
+ * so we enter it for him !!!
+ * note that it set character c to character
+ * it changed.
+*/
+char *fix_deleted_char(const char *path, char *c);
 
 /*
  * Parse directory and set dir_size to entry number and

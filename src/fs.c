@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 05:42:12 AM IRST
+ * [] Last Modified : Tue 30 Dec 2014 08:04:38 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -129,6 +129,29 @@ char *get_parent_path(const char *path)
 		len--;
 	ret[len] = '/';
 	ret[len + 1] = 0;
+
+	return ret;
+}
+
+char *fix_deleted_char(const char *path, char *c)
+{
+	char *ret = malloc(strlen(path) * sizeof(char) + 1);
+
+	strcpy(ret, path);
+	if (ret[strlen(ret) - 1] == '/')
+		ret[strlen(ret) - 1] = 0;
+
+	int len = strlen(ret);
+
+	while (ret[len] != '/' && len)
+		len--;
+	if (len) {
+		*c = ret[len + 1];
+		ret[len + 1] = 0xE5;
+	} else {
+		*c = ret[len];
+		ret[len] = 0xE5;
+	}
 
 	return ret;
 }

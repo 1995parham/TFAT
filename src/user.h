@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 06:10:13 PM IRST
+ * [] Last Modified : Tue 30 Dec 2014 08:11:58 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -49,6 +49,8 @@ void hdump(const char *dir);
 void dump(const char *dir);
 
 void delete(const char *dir);
+
+void undelete(const char *dir);
 
 void umount(void);
 
