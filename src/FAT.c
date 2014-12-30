@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 02:43:24 AM IRST
+ * [] Last Modified : Tue 30 Dec 2014 05:31:07 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -268,4 +268,6 @@ void write_fat(int fd)
 
 	for (i = 0; i < fat_boot.table_count; i++)
 		write(fd, fat_table, fat_boot.table_size_16 * SECTOR);
+	write(fd, root_dir, fat_boot.root_entry_count *
+			sizeof(struct fat_dir_layout));
 }

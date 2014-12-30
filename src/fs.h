@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Sun 28 Dec 2014 08:39:50 PM IRST
+ * [] Last Modified : Tue 30 Dec 2014 05:43:06 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -26,7 +26,8 @@ void init_fs(int dev);
  * you shoud free directory list and store returned address
  * elsewhere.
 */
-struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char *term, int size);
+struct fat_dir_layout *search(const struct fat_dir_layout *root_dir,
+		const char *term, int size);
 
 /*
  * Find path in filesystem tree.
@@ -35,9 +36,22 @@ struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char 
 struct fat_dir_layout *find(const char *path);
 
 /*
+ * Returne parent path for
+ * given path for example
+ * $$$/A/B ==> $$$/A/
+*/
+char *get_parent_path(const char *path);
+
+/*
  * Parse directory and set dir_size to entry number and
  * set entry itself in fat_dir_layout*
 */
 struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size);
+
+/*
+ * Write entries at first cluster of dir
+*/
+void write_dir(struct fat_dir_layout dir,
+		const struct fat_dir_layout *entries, int dir_size);
 
 #endif
