@@ -8,5 +8,5 @@ TODO List
 - [x] Adding long file name support
 - [x] Adding remove command.
 - [x] Adding flushing disk command.
-- [ ] Adding undelete command.
+- [x] Adding undelete command.
 - [ ] Writing test unit.
