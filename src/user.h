@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 07:52:04 PM IRST
+ * [] Last Modified : Tue 30 Dec 2014 06:10:13 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -34,7 +34,7 @@ void info(void);
 
 void cd(const char *path);
 
-void ls(const char *dir);
+void ls(const char *dir, int show_deleted);
 
 void chain(fat_addr_t cluster);
 

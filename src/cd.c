@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 29-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 11:31:04 AM IRST
+ * [] Last Modified : Tue 30 Dec 2014 05:58:21 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -22,7 +22,7 @@ char *current_path = NULL;
  * at the end ...
  * if your string do not have '/'
  * at the end everything goes
- * wrong if you want to parse it ...
+ * wrong if you want to "parse it" ...
 */
 void change_current_path(const char *new_path)
 {

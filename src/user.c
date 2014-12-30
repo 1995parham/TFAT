@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 05:45:23 AM IRST
+ * [] Last Modified : Tue 30 Dec 2014 06:21:57 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -106,15 +106,18 @@ void info(void)
  * associated with this entry gets
  * interpreted as subdirectory instead of as a file,
  * subdirectories have a filesize entry of zero.
+ *
+ * if you want to print deleted directory you must
+ * set show_deleted = 1
 */
-void list(struct fat_dir_layout *root_dir, int size)
+void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 {
 	int i = 0;
 
 	for (i = 0; i < size; i++) {
-		if (is_deleted(root_dir[i].name))
+		if (is_deleted(root_dir[i].name) && !show_deleted)
 			continue;
-		if (is_lfn(root_dir[i].attr))
+		if (!is_deleted(root_dir[i].name) && is_lfn(root_dir[i].attr))
 			lfn_add_slot(&root_dir[i], i);
 		if (root_dir[i].file_size && !is_special(root_dir[i].attr)) {
 			char dis_name[255];
@@ -140,7 +143,9 @@ void list(struct fat_dir_layout *root_dir, int size)
 			temp = get_attr(root_dir[i].attr);
 			strcpy(dis_attr, temp);
 			free(temp);
+
 			int unknown;
+
 			temp = lfn_get(&root_dir[i], &unknown);
 			if (temp) {
 				strcpy(dis_full_name, temp);
@@ -150,7 +155,8 @@ void list(struct fat_dir_layout *root_dir, int size)
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
 
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
-			printf("%s %s %4u %12s %4hX %s\n", dis_attr, dis_time, root_dir[i].file_size, dis_name,
+			printf("%s %s %4u %12s %4hX %s\n", dis_attr, dis_time
+					, root_dir[i].file_size, dis_name,
 					root_dir[i].first_cluster, dis_full_name);
 		}
 		if (is_directory(root_dir[i].attr)) {
@@ -171,7 +177,9 @@ void list(struct fat_dir_layout *root_dir, int size)
 			temp = get_attr(root_dir[i].attr);
 			strcpy(dis_attr, temp);
 			free(temp);
+			
 			int unknown;
+
 			temp = lfn_get(&root_dir[i], &unknown);
 			if (temp) {
 				strcpy(dis_full_name, temp);
@@ -182,7 +190,8 @@ void list(struct fat_dir_layout *root_dir, int size)
 			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
 
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
-			printf("%s %s ---- %12s %4hX %s\n", dis_attr, dis_time, dis_name,
+			printf("%s %s ---- %12s %4hX %s\n", dis_attr,
+					dis_time, dis_name,
 					root_dir[i].first_cluster, dis_full_name);
 		}
 	}
@@ -197,7 +206,7 @@ char *address_convertor(const char *path)
 {
 	int len = 0;
 	char *ret = NULL;
-	
+
 	if (!path) {
 		len = strlen(current_path) + 1;
 		ret = malloc(len * sizeof(char));
@@ -205,7 +214,7 @@ char *address_convertor(const char *path)
 		strcpy(ret, current_path);
 	} else if (path[0] == '.' && path[1] == '.') {
 		int seek = 2;
-		
+
 		if (path[2] == '/')
 			seek = 3;
 
@@ -236,7 +245,7 @@ char *address_convertor(const char *path)
 		ret = malloc(len * sizeof(char));
 
 		strcpy(ret, path);
-		
+
 		if (ret[strlen(ret) - 1] != '/') {
 			ret[strlen(ret) + 1] = 0;
 			ret[strlen(ret)] = '/';
@@ -250,7 +259,7 @@ void cd(const char *path)
 {
 	struct fat_dir_layout *dir;
 	char *npath = NULL;
-	
+
 	npath = address_convertor(path);
 	if (!strcmp(npath, "/")) {
 		change_current_path(npath);
@@ -258,7 +267,7 @@ void cd(const char *path)
 	} else {
 
 		dir = find(npath);
-		
+
 		if (dir == NULL) {
 			printf("Folder %s Not Found\n", npath);
 			free(npath);
@@ -283,16 +292,16 @@ void cd(const char *path)
  * so we cannot use our find
  * function so we do it manually
 */
-void ls(const char *dir)
+void ls(const char *dir, int show_deleted)
 {
 	TEST_FD();
-	
+
 	char *ndir = NULL;
 
 	ndir = address_convertor(dir);
 
 	if (!strcmp(ndir, "/")) {
-		list(root_dir, fat_boot.root_entry_count);
+		list(root_dir, fat_boot.root_entry_count, show_deleted);
 	} else {
 		int size;
 		struct fat_dir_layout *folder = find(ndir);
@@ -309,7 +318,7 @@ void ls(const char *dir)
 			return;
 		}
 
-		list(root_dir, size);
+		list(root_dir, size, show_deleted);
 
 		free(folder);
 		free(root_dir);
@@ -367,9 +376,9 @@ void hdump(const char *dir)
 void dump(const char *dir)
 {
 	TEST_FD();
-	
+
 	char *ndir = NULL;
-	
+
 	ndir = address_convertor(dir);
 
 	struct fat_dir_layout *file = find(ndir);
@@ -485,6 +494,7 @@ void delete(const char *dir)
 	struct fat_dir_layout *folder = NULL;
 	struct fat_dir_layout *file = find(ndir);
 	struct fat_dir_layout *parent_file = NULL;
+
 	if (strcmp(pndir, "/")) {
 		parent_file = find(pndir);
 		folder = parse_dir(*parent_file, &size);
@@ -503,15 +513,16 @@ void delete(const char *dir)
 
 	while (cluster) {
 		fat_addr_t cluster_bak = cluster;
+
 		cluster = next_cluster(cluster);
 		printf("Make cluster number %hu zero\n", cluster_bak);
 		change_cluster(cluster_bak, 0x0000);
 	}
-	
+
 	int i = 0;
 
 	for (i = 0; i < size; i++) {
-		if (!memcmp(&folder[i], file, sizeof(struct fat_dir_layout))){
+		if (!memcmp(&folder[i], file, sizeof(struct fat_dir_layout))) {
 			if (parent_file) {
 				folder[i].name[0] = 0xE5;
 				write_dir(*parent_file, folder, size);

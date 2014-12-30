@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 07:54:40 PM IRST
+ * [] Last Modified : Tue 30 Dec 2014 06:12:30 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -55,7 +55,12 @@ void cd_command(const char *path)
 
 void ls_command(const char *dir)
 {
-	ls(dir);
+	ls(dir, 0);
+}
+
+void lsdel_command(const char *dir)
+{
+	ls(dir, 1);
 }
 
 void chain_command(uint16_t index)
@@ -224,6 +229,16 @@ void command_dispatcher(const char *command)
 			return;
 		}
 		ls_command(dir);
+	} else if (!strcmp(verb, "lsdel")) {
+		char dir[MAX_BUFF];
+		int len;
+
+		len = sscanf(command, "%s %s", verb, dir);
+		if (len < 2) {
+			lsdel_command(NULL);
+			return;
+		}
+		lsdel_command(dir);
 	} else if (!strcmp(verb, "chain")) {
 		uint16_t index;
 		int len;

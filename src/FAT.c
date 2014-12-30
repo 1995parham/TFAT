@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 05:31:07 AM IRST
+ * [] Last Modified : Tue 30 Dec 2014 05:59:49 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -87,6 +87,7 @@ fat_addr_t next_cluster(fat_addr_t index)
 void change_cluster(fat_addr_t index, fat_addr_t new_value)
 {
 	fat_table[index] = new_value;
+	fat_table_bak[index] = new_value;
 }
 
 fat_addr_t root_dir_sectors(void)

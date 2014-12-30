@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 02:41:42 AM IRST
+ * [] Last Modified : Tue 30 Dec 2014 06:00:22 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -98,7 +98,7 @@ fat_addr_t next_cluster(fat_addr_t index);
 
 /*
  * Change cluster numbered index in fat table
- * into new_value
+ * and fat table backup into new_value
 */
 void change_cluster(fat_addr_t index, fat_addr_t new_value);
 
@@ -187,6 +187,8 @@ struct tm create_time(const uint16_t create_time, const uint16_t create_date);
 /*
  * Set change in backup fat table
  * and write them into disk again.
+ * with this function we also write
+ * back root directory
  *
  * [EXPERIMENTAL]
 */
