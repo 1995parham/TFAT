@@ -10,3 +10,4 @@ TODO List
 - [x] Adding flushing disk command.
 - [x] Adding undelete command.
 - [ ] Writing test unit.
+- [ ] Adding FAT32 support
