@@ -51,9 +51,14 @@ static unsigned char fat_uni2esc[64] = {
 			(lfn_slot*CHARS_PER_LFN*2),		\
 			lfn_parts*CHARS_PER_LFN, 0)		\
 
-#define BYTES_TO_WCHAR(cl, ch)					\
-	((wchar_t)((unsigned)(cl) + ((unsigned)(ch) << 8)))	\
+/* Concat two characters to form a wide character*/
+#define BYTES_TO_WCHAR(ch1, ch2)				\
+	((wchar_t)((unsigned)(ch1) + ((unsigned)(ch2) << 8)))	\
 
+/*
+ * This is a helper function for calculate number of multibyte characters
+ * that wide character needed when converted to multibyte form.
+*/
 static size_t mbslen(wchar_t x)
 {
 	wchar_t wstr[] = {x, 0};
