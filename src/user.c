@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Wed 31 Dec 2014 12:52:21 AM IRST
+ * [] Last Modified : Thu 01 Jan 2015 05:43:25 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -50,9 +50,10 @@ void mount(const char *dev, int wflag)
 
 	char *new_label = get_label();
 
-	change_label(new_label);
-	if (new_label)
+	if (new_label) {
+		change_label(new_label);
 		free(new_label);
+	}
 }
 
 

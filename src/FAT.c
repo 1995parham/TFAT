@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 05:59:49 PM IRST
+ * [] Last Modified : Thu 01 Jan 2015 05:42:00 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -138,6 +138,17 @@ int is_special(const uint8_t attr)
 int is_deleted(const uint8_t name[])
 {
 	return name[0] == 0xE5;
+}
+
+char *get_label(void)
+{
+	char *ret_label = malloc(12 * sizeof(char));
+	int i = 0;
+
+	for (i = 0; i < 11; i++)
+		ret_label[i] = fat_boot.extBS.volume_label[i];
+	ret_label[11] = 0;
+	return rtrim(ret_label);
 }
 
 /*

@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 08:32:33 PM IRST
+ * [] Last Modified : Thu 01 Jan 2015 05:42:42 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -135,6 +135,11 @@ fat_addr_t data_sectors(void);
  * The total number of clusters
 */
 fat_addr_t total_clusters(void);
+
+/*
+ * Get disk label in null-terminated string
+*/
+char *get_label(void);
 
 /*
  * Get name in null-terminated string
