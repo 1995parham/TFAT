@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 01 Jan 2015 07:35:43 PM IRST
+ * [] Last Modified : Fri 02 Jan 2015 12:08:11 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -467,7 +467,12 @@ void dump_fat(const char *path)
 
 	if (file <= 0)
 		sdie("cannot open %s", path);
-	/* write(file, fat_table, SECTOR * fat_boot.table_size_16); */
+	fat_addr_t i = 0;
+	
+	for (i = 0; i < table_size(); i++) {
+		fat_addr_t value = get_cluster(i);
+		write(file, &value, (FATN == 1) ? 2 : 4);
+	}
 	close(file);
 }
 
