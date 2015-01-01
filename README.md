@@ -10,7 +10,7 @@ Following library from GNU with GPL used in this project:
 
 In this project we using kernel-coding style from Linus Torvalds and using some script from kernel to validate our code against that.
 
-Some TFAT features include:
+Some TFAT features include:  
 1. FAT type detection  
 2. Support FAT16 & FAT32  
 3. Delete & Undelete  
