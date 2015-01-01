@@ -10,3 +10,5 @@ TODO List
 - [x] Adding flushing disk command.
 - [x] Adding undelete command.
 - [ ] Writing test unit.
+- [ ] Improve delete command.
+- [ ] Improve LFN support.
