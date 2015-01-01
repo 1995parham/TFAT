@@ -1,3 +1,6 @@
+# Test images
+*.img
+
 # Object files
 *.o
 *.ko
