@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 01 Jan 2015 05:42:42 AM IRST
+ * [] Last Modified : Thu 01 Jan 2015 07:51:57 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -16,17 +16,6 @@
 #include <time.h>
 #include <stdint.h>
 #include <sys/types.h>
-
-struct fat_extBS_16 {
-	uint8_t		bios_drive_num;
-	uint8_t		reserved;
-	uint8_t		boot_signature;
-	uint32_t	volume_id;
-	uint8_t		volume_label[11];
-	uint8_t		fat_type_label[8];
-	uint8_t		boot_code[448];
-	uint16_t	bootable_partition;
-} __attribute__((packed));
 
 struct fat_BS {
 	uint8_t			bootjmp[3];
@@ -43,10 +32,9 @@ struct fat_BS {
 	uint16_t		head_side_count;
 	uint32_t		hidden_sector_count;
 	uint32_t		total_sectors_32;
-	struct fat_extBS_16	extBS;
 } __attribute__((packed));
 
-typedef uint16_t fat_addr_t;
+typedef uint32_t fat_addr_t;
 
 struct fat_dir_layout {
 	uint8_t		name[8];
@@ -57,29 +45,28 @@ struct fat_dir_layout {
 	uint16_t	create_time;
 	uint16_t	create_date;
 	uint16_t	access_date;
-	uint16_t	zero;		/* Why ??? */
+	uint16_t	first_cluster_high;
 	uint16_t	modification_time;
 	uint16_t	modification_date;
-	uint16_t	first_cluster;
+	uint16_t	first_cluster_low;
 	uint32_t	file_size;
 } __attribute__((packed));
-
-/*
- * Clusters status code constant
-*/
-#define FREE_CLUSTER 0x0000
-#define LAST_CLUSTER 0xFFFF
-#define RES1_CLUSTER 0x0001
-#define BADC_CLUSTER 0xFFF7
 
 /* Public structs and vars */
 
 extern struct fat_BS fat_boot;
-extern fat_addr_t *fat_table;
-extern fat_addr_t *fat_table_bak;
 extern struct fat_dir_layout *root_dir;
-extern off_t data_offset;
+
+/* *** */
+
 extern fat_addr_t SECTOR;
+/*
+ * 0: Not initiated
+ * 1: FAT16
+ * 2: FAT32
+ * other: something wrong....
+*/
+extern int FATN;
 
 /* Functions */
 
@@ -93,11 +80,22 @@ extern fat_addr_t SECTOR;
 void init_fat(int fd);
 
 /*
- * Free fat_table,
- * fat_table_bak and
- * root_dir
+ * Free root_dir
 */
 void free_fat(void);
+
+/*
+ * Return offset of first sector of given cluster
+*/
+off_t cluster_to_sector(fat_addr_t cluster);
+
+/*
+ * Build first cluster address
+ * from first_cluster_low and
+ * first_cluster_high fields of
+ * fat_dir_layout struct
+*/
+fat_addr_t first_cluster(struct fat_dir_layout dir);
 
 /*
  * Find next cluster from fat table
@@ -111,30 +109,21 @@ fat_addr_t next_cluster(fat_addr_t index);
 void change_cluster(fat_addr_t index, fat_addr_t new_value);
 
 /*
- * The first in the File Allocation Table
+ * Get the value of cluster numbered index
+ * int fat table
 */
-fat_addr_t first_fat_sector(void);
+fat_addr_t get_cluster(fat_addr_t index);
+fat_addr_t get_cluster_bak(fat_addr_t index);
 
 /*
- * The size of the root directory
+ * FAT table size
 */
-fat_addr_t root_dir_sectors(void);
+fat_addr_t table_size(void);
 
 /*
- * The first data sector
- * (that is, the first sector in which directories and files may be stored)
+ * The total number of sectors
 */
-fat_addr_t first_data_sector(void);
-
-/*
- * The total number of data sectors
-*/
-fat_addr_t data_sectors(void);
-
-/*
- * The total number of clusters
-*/
-fat_addr_t total_clusters(void);
+fat_addr_t total_sectors(void);
 
 /*
  * Get disk label in null-terminated string

@@ -5,13 +5,15 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 01 Jan 2015 05:42:00 AM IRST
+ * [] Last Modified : Thu 01 Jan 2015 07:51:31 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
 */
 #include "FAT.h"
 #include "common.h"
+#include "FAT16.h"
+#include "FAT32.h"
 
 #include <time.h>
 #include <ctype.h>
@@ -22,15 +24,17 @@
 
 
 struct fat_BS fat_boot;
+struct fat_info_32 fat_info;
 fat_addr_t *fat_table;
 fat_addr_t *fat_table_bak;
 struct fat_dir_layout *root_dir;
-off_t data_offset;
+
 fat_addr_t SECTOR;
+int FATN;
 
 void init_fat(int fd)
 {
-	read(fd, &fat_boot, 512);
+	read(fd, &fat_boot, sizeof(fat_boot));
 
 	/*
 	 * Initiate SECTOR size for
@@ -39,90 +43,91 @@ void init_fat(int fd)
 	SECTOR = fat_boot.bytes_per_sector;
 
 	/*
-	 * Seek after reserved sectors
-	 * Please note that we read one
-	 * of them by now
+	 * Initiate FATN value for
+	 * further use
 	*/
-	lseek(fd, fat_boot.reserved_sector_count * SECTOR, SEEK_SET);
+	if (fat_boot.total_sectors_16 == 0)
+		FATN = 2;
+	else
+		FATN = 1;
 
-	fat_table = malloc(sizeof(fat_addr_t) *
-			(SECTOR  / 2) * fat_boot.table_size_16);
-	read(fd, fat_table, SECTOR * fat_boot.table_size_16);
-
-	fat_table_bak = malloc(sizeof(fat_addr_t) *
-			(SECTOR / 2) * fat_boot.table_size_16);
-	read(fd, fat_table_bak, SECTOR * fat_boot.table_size_16);
-
-	/*
-	 * We are going to ignore remain
-	 * FAT table !!! ;-)))
-	*/
-	if (fat_boot.table_count > 2)
-		lseek(fd, (fat_boot.table_count - 2) *
-				SECTOR *
-				fat_boot.table_size_16, SEEK_CUR);
-
-	root_dir = malloc(sizeof(struct fat_dir_layout) *
-			fat_boot.root_entry_count);
-	read(fd, root_dir, fat_boot.root_entry_count *
-			sizeof(struct fat_dir_layout));
-
-	data_offset = lseek(fd, 0, SEEK_CUR);
+	if (FATN == 1)
+		init_fat_16(fd);
+	else
+		init_fat_32(fd);
 }
 
 void free_fat(void)
 {
-	free(fat_table);
-	free(fat_table_bak);
+	if (FATN == 1)
+		free_fat_16();
+	else
+		free_fat_32();
 	free(root_dir);
+}
+
+off_t cluster_to_sector(fat_addr_t cluster)
+{
+	if (FATN == 1)
+		return cluster_to_sector_16(cluster);
+	else
+		return cluster_to_sector_32(cluster);
+}
+
+fat_addr_t first_cluster(struct fat_dir_layout dir)
+{
+	if (FATN == 1)
+		return first_cluster_16(dir);
+	else
+		return first_cluster_32(dir);
 }
 
 fat_addr_t next_cluster(fat_addr_t index)
 {
-	if ((fat_table[index] & 0xF000) == 0xF000)
-		return 0x0000;
-	return fat_table[index];
+	if (FATN == 1)
+		return next_cluster_16(index);
+	else
+		return next_cluster_32(index);
 }
 
 void change_cluster(fat_addr_t index, fat_addr_t new_value)
 {
-	fat_table[index] = new_value;
-	fat_table_bak[index] = new_value;
+	if (FATN == 1)
+		return change_cluster_16(index, new_value);
+	else
+		return change_cluster_32(index, new_value);
 }
 
-fat_addr_t root_dir_sectors(void)
+fat_addr_t get_cluster(fat_addr_t index)
 {
-	return ((fat_boot.root_entry_count * 32) +
-			(fat_boot.bytes_per_sector - 1)) /
-		fat_boot.bytes_per_sector;
-
+	if (FATN == 1)
+		return get_cluster_16(index);
+	else
+		return get_cluster_32(index);
 }
 
-fat_addr_t first_fat_sector(void)
+fat_addr_t get_cluster_bak(fat_addr_t index)
 {
-	return  fat_boot.reserved_sector_count;
+	if (FATN == 1)
+		return get_cluster_bak_16(index);
+	else
+		return get_cluster_bak_32(index);
 }
 
-fat_addr_t first_data_sector(void)
+fat_addr_t table_size(void)
 {
-	return fat_boot.reserved_sector_count +
-		(fat_boot.table_count *
-		 fat_boot.table_size_16);
+	if (FATN == 1)
+		return fat_boot.table_size_16 * (SECTOR / 2);
+	else
+		return fat_boot_32.table_size_32 * (SECTOR / 4);
 }
 
-fat_addr_t data_sectors(void)
+fat_addr_t total_sectors(void)
 {
-	return fat_boot.total_sectors_16 -
-		(fat_boot.reserved_sector_count +
-		 (fat_boot.table_count *
-		  fat_boot.table_size_16) +
-		 root_dir_sectors());
-}
-
-fat_addr_t total_clusters(void)
-{
-	return (data_sectors() /
-			fat_boot.sectors_per_cluster);
+	if (FATN == 1)
+		return fat_boot.total_sectors_16;
+	else
+		return fat_boot.total_sectors_32;
 }
 
 int is_directory(const uint8_t attr)
@@ -142,13 +147,10 @@ int is_deleted(const uint8_t name[])
 
 char *get_label(void)
 {
-	char *ret_label = malloc(12 * sizeof(char));
-	int i = 0;
-
-	for (i = 0; i < 11; i++)
-		ret_label[i] = fat_boot.extBS.volume_label[i];
-	ret_label[11] = 0;
-	return rtrim(ret_label);
+	if (FATN == 1)
+		return get_label_16();
+	else
+		return get_label_32();
 }
 
 /*
@@ -163,16 +165,13 @@ char *get_name(const uint8_t name[],
 	if (name[0] == 0x00)
 		return NULL;
 
-	/*
-	 * TODO please fix following condition
-	*/
-	if (name[0] == 0xE5)
-		;
 	char *ret_name = malloc(9 * sizeof(char));
 	int lower = case_information & 0x8;
 
-	if (name[0] == 0x05)
-		ret_name[0] = 0xe5;
+	if (name[0] == 0xE5)
+		ret_name[0] = '?';
+	else if (name[0] == 0x05)
+		ret_name[0] = 0xE5;
 	else
 		ret_name[0] = (lower) ? tolower(name[0]) : name[0];
 	int i;
@@ -268,18 +267,8 @@ struct tm create_time(const uint16_t create_time, const uint16_t create_date)
 
 void write_fat(int fd)
 {
-	memcpy(fat_table_bak, fat_table, SECTOR * fat_boot.table_size_16);
-
-	/*
-	 * Write fat_table value into all fat table
-	 * available on disk
-	*/
-	lseek(fd, fat_boot.reserved_sector_count * SECTOR, SEEK_SET);
-
-	int i;
-
-	for (i = 0; i < fat_boot.table_count; i++)
-		write(fd, fat_table, fat_boot.table_size_16 * SECTOR);
-	write(fd, root_dir, fat_boot.root_entry_count *
-			sizeof(struct fat_dir_layout));
+	if (FATN == 1)
+		write_fat_16(fd);
+	else
+		write_fat_32(fd);
 }

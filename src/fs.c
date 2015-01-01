@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 01 Jan 2015 05:43:08 AM IRST
+ * [] Last Modified : Thu 01 Jan 2015 06:40:15 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -166,20 +166,13 @@ struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size)
 
 	*dir_size = 0;
 	struct fat_dir_layout *entries = NULL;
-	fat_addr_t cluster = dir.first_cluster;
-
-	if (!cluster) {
-		entries = malloc(32 * fat_boot.root_entry_count);
-		memcpy(entries, root_dir, 32 * fat_boot.root_entry_count);
-		*dir_size = fat_boot.root_entry_count;
-		return entries;
-	}
+	fat_addr_t cluster = first_cluster(dir);
 
 	int index = 0;
 	entries = malloc(SECTOR * fat_boot.sectors_per_cluster);
 
 	while (cluster) {
-		lseek(fd, SECTOR * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
+		lseek(fd, cluster_to_sector(cluster), SEEK_SET);
 		read(fd, entries + index, SECTOR * fat_boot.sectors_per_cluster);
 		*dir_size += (SECTOR * fat_boot.sectors_per_cluster) / sizeof(struct fat_dir_layout);
 		index += SECTOR * fat_boot.sectors_per_cluster;
@@ -197,11 +190,11 @@ void write_dir(struct fat_dir_layout dir, const struct fat_dir_layout *entries, 
 	if (!is_directory(dir.attr))
 		return;
 
-	fat_addr_t cluster = dir.first_cluster;
+	fat_addr_t cluster = first_cluster(dir);
 	int index = 0;
 
 	while (cluster) {
-		lseek(fd, SECTOR * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
+		lseek(fd, cluster_to_sector(cluster), SEEK_SET);
 		write(fd, entries + index, SECTOR * fat_boot.sectors_per_cluster);
 		dir_size -= (SECTOR * fat_boot.sectors_per_cluster) / sizeof(struct fat_dir_layout);
 		index += SECTOR * fat_boot.sectors_per_cluster;

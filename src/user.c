@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 01 Jan 2015 05:43:25 AM IRST
+ * [] Last Modified : Thu 01 Jan 2015 07:35:43 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -60,6 +60,10 @@ void mount(const char *dev, int wflag)
 void info(void)
 {
 	TEST_FD();
+	if (FATN == 1)
+		printf("FAT16\n");
+	else
+		printf("FAT32\n");
 
 	printf("Boot Jump: %2X %2X %2X\n",
 			fat_boot.bootjmp[0],
@@ -81,29 +85,20 @@ void info(void)
 	printf("Sectors Per Cluster: %hu\n",
 			fat_boot.sectors_per_cluster);
 
-	printf("Root Entry Count: %hu\n",
-			fat_boot.root_entry_count);
-
 	printf("Reserved Sectors: %hu\n",
 			fat_boot.reserved_sector_count);
 
 	printf("FAT Tables: %hhu\n",
 			fat_boot.table_count);
 
-	printf("Table Size: %hu\n",
-			fat_boot.table_size_16);
+	printf("Table Size: %u\n", table_size());
 
-	printf("Total Sectors: %hu\n",
-			fat_boot.total_sectors_16);
+	printf("Total Sectors: %u\n", total_sectors());
 
-	printf("Total Size: %u KB\n",
-			fat_boot.total_sectors_16 *
-			fat_boot.bytes_per_sector / 1024);
-
-	fat_addr_t root_cluster = first_data_sector();
-
-	printf("Root Cluster Sector: %hu\n",
-			root_cluster);
+	uint64_t total_size = total_sectors();
+	total_size *= fat_boot.bytes_per_sector;
+	total_size /= (1024 * 1024);
+	printf("Total Size: %lu MB\n", total_size);
 }
 
 /*
@@ -118,7 +113,7 @@ void info(void)
  * if you want to print deleted directory you must
  * set show_deleted = 1
 */
-void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
+static void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 {
 	int i = 0;
 
@@ -165,7 +160,7 @@ void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
 			printf("%s %s %4u %12s %4hX %s\n", dis_attr, dis_time
 					, root_dir[i].file_size, dis_name,
-					root_dir[i].first_cluster, dis_full_name);
+					first_cluster(root_dir[i]), dis_full_name);
 		}
 		if (is_directory(root_dir[i].attr)) {
 			char dis_name[255];
@@ -200,7 +195,7 @@ void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
 			printf("%s %s ---- %12s %4hX %s\n", dis_attr,
 					dis_time, dis_name,
-					root_dir[i].first_cluster, dis_full_name);
+					first_cluster(root_dir[i]), dis_full_name);
 		}
 	}
 }
@@ -349,28 +344,29 @@ void hdump(const char *dir)
 		free(ndir);
 		return;
 	}
-	fat_addr_t cluster = file->first_cluster;
+	fat_addr_t cluster = first_cluster(*file);
 	unsigned int size = file->file_size;
 	printf("File: %s, Size: %d\n", ndir, size);
 	printf("================####====================\n");
 	while (cluster) {
 		if (size < fat_boot.sectors_per_cluster * SECTOR) {
 			uint8_t buff[size];
-			lseek(fd, SECTOR * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
-			read(fd, buff, size);
-
 			int j = 0;
+
+			lseek(fd, cluster_to_sector(cluster), SEEK_SET);
+			read(fd, buff, size);
 
 			for (j = 0; j < size; j++)
 				printf("%02X ", buff[j]);
 		} else {
 			uint8_t buff[SECTOR * fat_boot.sectors_per_cluster];
-			lseek(fd, SECTOR * fat_boot.sectors_per_cluster * (cluster - 2) + data_offset, SEEK_SET);
-			read(fd, buff, SECTOR * fat_boot.sectors_per_cluster);
-
 			int j = 0;
 
-			for (j = 0; j < SECTOR * fat_boot.sectors_per_cluster; j++)
+			lseek(fd, cluster_to_sector(cluster), SEEK_SET);
+			read(fd, buff, SECTOR * fat_boot.sectors_per_cluster);
+
+			for (j = 0; j < SECTOR *
+					fat_boot.sectors_per_cluster; j++)
 				printf("%02X ", buff[j]);
 			size -= SECTOR * fat_boot.sectors_per_cluster;
 		}
@@ -396,7 +392,7 @@ void dump(const char *dir)
 		free(ndir);
 		return;
 	}
-	fat_addr_t cluster = file->first_cluster;
+	fat_addr_t cluster = first_cluster(*file);
 	unsigned int size = file->file_size;
 
 	printf("File: %s, Size: %d\n", ndir, size);
@@ -404,23 +400,19 @@ void dump(const char *dir)
 	while (cluster) {
 		if (size < fat_boot.sectors_per_cluster * SECTOR) {
 			uint8_t buff[size];
-
-			lseek(fd, SECTOR * fat_boot.sectors_per_cluster *
-					(cluster - 2) + data_offset, SEEK_SET);
-			read(fd, buff, size);
-
 			int j = 0;
+
+			lseek(fd, cluster_to_sector(cluster), SEEK_SET);
+			read(fd, buff, size);
 
 			for (j = 0; j < size; j++)
 				printf("%c", buff[j]);
 		} else {
 			uint8_t buff[SECTOR * fat_boot.sectors_per_cluster];
-
-			lseek(fd, SECTOR * fat_boot.sectors_per_cluster *
-					(cluster - 2) + data_offset, SEEK_SET);
-			read(fd, buff, SECTOR * fat_boot.sectors_per_cluster);
-
 			int j = 0;
+
+			lseek(fd, cluster_to_sector(cluster), SEEK_SET);
+			read(fd, buff, SECTOR * fat_boot.sectors_per_cluster);
 
 			for (j = 0; j < SECTOR *
 					fat_boot.sectors_per_cluster; j++)
@@ -453,7 +445,7 @@ void fat(void)
 
 	fat_addr_t i = 0;
 
-	for (i = 0; i < fat_boot.table_size_16 * (SECTOR / 2); i++) {
+	for (i = 0; i < table_size(); i++) {
 		if (i % 10 == 0) {
 			printf("Do you want to continue ?(Y/n)");
 
@@ -463,7 +455,7 @@ void fat(void)
 			if (c != 'Y')
 				return;
 		}
-		printf("%hX <--> %hX\n", i, fat_table[i]);
+		printf("%X <--> %X\n", i, get_cluster(i));
 	}
 }
 
@@ -475,7 +467,7 @@ void dump_fat(const char *path)
 
 	if (file <= 0)
 		sdie("cannot open %s", path);
-	write(file, fat_table, SECTOR * fat_boot.table_size_16);
+	/* write(file, fat_table, SECTOR * fat_boot.table_size_16); */
 	close(file);
 }
 
@@ -485,9 +477,10 @@ void test_fat(void)
 
 	fat_addr_t i = 0;
 
-	for (i = 0; i < fat_boot.table_size_16 * (SECTOR / 2); i++)
-		if (fat_table[i] != fat_table_bak[i])
-			printf("We have error on entry %d, %hX != %hX", i, fat_table[i], fat_table_bak[i]);
+	for (i = 0; i < table_size(); i++)
+		if (get_cluster(i) != get_cluster_bak(i))
+			printf("We have error on entry %u, %X != %X", i,
+					get_cluster(i), get_cluster_bak(i));
 }
 
 void delete(const char *dir)
@@ -517,14 +510,14 @@ void delete(const char *dir)
 		printf("File %s Not Found\n", dir);
 		return;
 	}
-	fat_addr_t cluster = file->first_cluster;
+	fat_addr_t cluster = first_cluster(*file);
 
 	while (cluster) {
 		fat_addr_t cluster_bak = cluster;
 
 		cluster = next_cluster(cluster);
 		printf("Make cluster number %hu zero\n", cluster_bak);
-		change_cluster(cluster_bak, 0x0000);
+		change_cluster(cluster_bak, 0x00000000);
 	}
 
 	int i = 0;
@@ -562,6 +555,14 @@ void undelete(const char *dir)
 	struct fat_dir_layout *file = find(ndir);
 	struct fat_dir_layout *parent_file = NULL;
 
+	if (file == NULL) {
+		printf("File %s Not Found\n", dir);
+		free(ddir);
+		free(ndir);
+		free(pndir);
+		return;
+	}
+
 	if (strcmp(pndir, "/")) {
 		parent_file = find(pndir);
 		folder = parse_dir(*parent_file, &size);
@@ -573,14 +574,10 @@ void undelete(const char *dir)
 	free(ndir);
 	free(pndir);
 
-	if (file == NULL) {
-		printf("File %s Not Found\n", dir);
-		return;
-	}
-	fat_addr_t cluster = file->first_cluster;
+	fat_addr_t cluster = first_cluster(*file);
 
 	printf("Make cluster number %hu unzero\n", cluster);
-	change_cluster(cluster, 0xFFFF);
+	change_cluster(cluster, 0x0FFFFFFF);
 
 	int i = 0;
 

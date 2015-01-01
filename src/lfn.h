@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 27-12-2014
  *
- * [] Last Modified : Mon 29 Dec 2014 11:19:09 AM IRST
+ * [] Last Modified : Thu 01 Jan 2015 04:45:36 AM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -35,12 +35,19 @@
 
 /*
  * @id: sequence number for slot
+ *
  * @name0_4: first 5 characters in name
+ *
  * @attr: attribute byte
+ *
  * @reserved: always 0
+ *
  * @alias_checksum: checksum for 8.3 alias
+ *
  * @name5_10: 6 more characters in name
+ *
  * @start: starting cluster number, 0 in long slots
+ *
  * @name11_12: last 2 characters in name
 */
 
