@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Wed 31 Dec 2014 12:45:40 AM IRST
+ * [] Last Modified : Thu 08 Jan 2015 06:00:36 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -110,6 +110,11 @@ void undelete_command(const char *dir)
 void info_command(void)
 {
 	info();
+}
+
+void test_command(uint32_t cluster)
+{
+	test(cluster);
 }
 
 void show_command(char c)
@@ -249,10 +254,10 @@ void command_dispatcher(const char *command)
 		}
 		lsdel_command(dir);
 	} else if (!strcmp(verb, "chain")) {
-		uint16_t index;
+		uint32_t index;
 		int len;
 
-		len = sscanf(command, "%s %hu", verb, &index);
+		len = sscanf(command, "%s %u", verb, &index);
 		if (len < 2) {
 			printf("chain cluster-number\n");
 			return;
@@ -325,6 +330,16 @@ void command_dispatcher(const char *command)
 		show_command(c);
 	} else if (!strcmp(verb, "test_fat")) {
 		test_fat_command();
+	} else if(!strcmp(verb, "test")) {
+		uint32_t index;
+		int len;
+
+		len = sscanf(command, "%s %u", verb, &index);
+		if (len < 2) {
+			printf("test cluster-number\n");
+			return;
+		}
+		test_command(index);
 	} else {
 		printf("404 Not Found\n");
 	}

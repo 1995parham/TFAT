@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 01 Jan 2015 05:01:27 AM IRST
+ * [] Last Modified : Thu 08 Jan 2015 05:50:33 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -62,5 +62,13 @@ struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size);
 */
 void write_dir(struct fat_dir_layout dir,
 		const struct fat_dir_layout *entries, int dir_size);
+
+/*
+ * Check given cluster for errors
+ * if there is a error it returns
+ * zero otherwise it returns non
+ * zero integer
+*/
+int test_cluster(fat_addr_t index);
 
 #endif

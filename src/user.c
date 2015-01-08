@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Fri 02 Jan 2015 12:08:11 AM IRST
+ * [] Last Modified : Thu 08 Jan 2015 06:04:33 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -468,7 +468,7 @@ void dump_fat(const char *path)
 	if (file <= 0)
 		sdie("cannot open %s", path);
 	fat_addr_t i = 0;
-	
+
 	for (i = 0; i < table_size(); i++) {
 		fat_addr_t value = get_cluster(i);
 		write(file, &value, (FATN == 1) ? 2 : 4);
@@ -602,6 +602,14 @@ void undelete(const char *dir)
 		free(parent_file);
 	}
 	free(file);
+}
+
+void test(fat_addr_t cluster)
+{
+	if (!test_cluster(cluster))
+		printf("%u : Bad Cluster\n", cluster);
+	else
+		printf("%u : Good Cluster\n", cluster);
 }
 
 void umount(void)

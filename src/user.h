@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Tue 30 Dec 2014 08:11:58 PM IRST
+ * [] Last Modified : Thu 08 Jan 2015 05:57:58 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -51,6 +51,8 @@ void dump(const char *dir);
 void delete(const char *dir);
 
 void undelete(const char *dir);
+
+void test(fat_addr_t cluster);
 
 void umount(void);
 

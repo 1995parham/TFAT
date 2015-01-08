@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 01 Jan 2015 06:40:15 AM IRST
+ * [] Last Modified : Thu 08 Jan 2015 05:57:08 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -17,6 +17,7 @@
 
 #include "FAT.h"
 #include "fs.h"
+#include "io.h"
 
 static int fd = -1;
 
@@ -200,4 +201,17 @@ void write_dir(struct fat_dir_layout dir, const struct fat_dir_layout *entries, 
 		index += SECTOR * fat_boot.sectors_per_cluster;
 		cluster = next_cluster(cluster);
 	}
+}
+
+int test_cluster(fat_addr_t index)
+{
+	fat_addr_t sector = cluster_to_sector(index);
+	int i = 0;
+
+	for (i = 0; i < fat_boot.sectors_per_cluster; i++) {
+		if (!fs_test(fd, (sector + i) * fat_boot.bytes_per_sector,
+					fat_boot.bytes_per_sector))
+			return 0;
+	}
+	return 1;
 }
