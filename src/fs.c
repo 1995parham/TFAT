@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 08 Jan 2015 05:57:08 PM IRST
+ * [] Last Modified : Thu 08 Jan 2015 06:38:03 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -14,6 +14,7 @@
 #include <malloc.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdio.h>
 
 #include "FAT.h"
 #include "fs.h"
@@ -24,10 +25,6 @@ static int fd = -1;
 void init_fs(int dev)
 {
 	fd = dev;
-	/*
-	 * TODO load all filesystem tree in
-	 * memory
-	*/
 }
 
 struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char *term, int size)
@@ -209,8 +206,8 @@ int test_cluster(fat_addr_t index)
 	int i = 0;
 
 	for (i = 0; i < fat_boot.sectors_per_cluster; i++) {
-		if (!fs_test(fd, (sector + i) * fat_boot.bytes_per_sector,
-					fat_boot.bytes_per_sector))
+		fprintf(stderr, "sector %u in cluster %u ", i, index);
+		if (!fs_test(fd, sector + i * SECTOR, SECTOR))
 			return 0;
 	}
 	return 1;

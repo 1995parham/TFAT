@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 08 Jan 2015 06:04:33 PM IRST
+ * [] Last Modified : Thu 08 Jan 2015 06:12:17 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -606,6 +606,8 @@ void undelete(const char *dir)
 
 void test(fat_addr_t cluster)
 {
+	TEST_FD();
+
 	if (!test_cluster(cluster))
 		printf("%u : Bad Cluster\n", cluster);
 	else
