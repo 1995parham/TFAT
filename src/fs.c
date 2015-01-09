@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 08 Jan 2015 06:38:03 PM IRST
+ * [] Last Modified : Fri 09 Jan 2015 06:48:03 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -145,18 +145,15 @@ char *fix_deleted_char(const char *path, char *c)
 		len--;
 	if (len) {
 		*c = ret[len + 1];
-		ret[len + 1] = 0xE5;
+		ret[len + 1] = '?';
 	} else {
 		*c = ret[len];
-		ret[len] = 0xE5;
+		ret[len] = '?';
 	}
 
 	return ret;
 }
 
-/*
- * TODO add directory chain handling with realoc()
-*/
 struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size)
 {
 	if (!is_directory(dir.attr))
@@ -167,22 +164,21 @@ struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size)
 	fat_addr_t cluster = first_cluster(dir);
 
 	int index = 0;
-	entries = malloc(SECTOR * fat_boot.sectors_per_cluster);
+	int nr = 1;
 
 	while (cluster) {
+		entries = realloc(entries, SECTOR * fat_boot.sectors_per_cluster * nr);
 		lseek(fd, cluster_to_sector(cluster), SEEK_SET);
 		read(fd, entries + index, SECTOR * fat_boot.sectors_per_cluster);
 		*dir_size += (SECTOR * fat_boot.sectors_per_cluster) / sizeof(struct fat_dir_layout);
 		index += SECTOR * fat_boot.sectors_per_cluster;
+		nr++;
 		cluster = next_cluster(cluster);
 	}
 
 	return entries;
 }
 
-/*
- * TODO add directory chain handling
-*/
 void write_dir(struct fat_dir_layout dir, const struct fat_dir_layout *entries, int dir_size)
 {
 	if (!is_directory(dir.attr))
