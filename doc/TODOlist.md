@@ -12,4 +12,4 @@ TODO List
 - [ ] Writing test unit.
 - [ ] Improve delete command.
 - [ ] Improve LFN support.
-- [ ] Find bad sectors.
+- [x] Find bad sectors.
