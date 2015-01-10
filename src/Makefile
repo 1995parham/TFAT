@@ -21,7 +21,7 @@ FAT16.o: FAT16.c FAT.h FAT16.h common.h
 	gcc $(CFLAGS) -c FAT16.c
 FAT32.o: FAT32.c FAT.h FAT32.h common.h
 	gcc $(CFLAGS) -c FAT32.c
-fs.o: fs.h fs.c FAT.h io.h
+fs.o: fs.h fs.c FAT.h io.h common.h
 	gcc $(CFLAGS) -c fs.c
 lfn.o: lfn.c lfn.h FAT.h common.h
 	gcc $(CFLAGS) -c lfn.c
