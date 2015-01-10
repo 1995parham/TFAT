@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Thu 08 Jan 2015 06:12:17 PM IRST
+ * [] Last Modified : Sat 10 Jan 2015 03:49:55 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -122,7 +122,7 @@ static void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 			continue;
 		if (!is_deleted(root_dir[i].name) && is_lfn(root_dir[i].attr))
 			lfn_add_slot(&root_dir[i], i);
-		if (root_dir[i].file_size && !is_special(root_dir[i].attr)) {
+		if (!is_directory(root_dir[i].attr) && !is_special(root_dir[i].attr)) {
 			char dis_name[255];
 			char dis_time[255];
 			char dis_attr[255];
@@ -222,6 +222,23 @@ char *address_convertor(const char *path)
 			seek = 3;
 
 		ret = get_parent_path(current_path);
+		len = strlen(ret) + strlen(path);
+		ret = realloc(ret, len * sizeof(char));
+		strcat(ret, path + seek);
+
+		if (ret[strlen(ret) - 1] != '/') {
+			ret[strlen(ret) + 1] = 0;
+			ret[strlen(ret)] = '/';
+		}
+	} else if (path[0] == '.') {
+		int seek = 1;
+
+		if (path[1] == '/')
+			seek = 2;
+
+		len = strlen(current_path) + 1;
+		ret = malloc(len * sizeof(char));
+		strcpy(ret, current_path);
 		len = strlen(ret) + strlen(path);
 		ret = realloc(ret, len * sizeof(char));
 		strcat(ret, path + seek);

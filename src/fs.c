@@ -5,7 +5,7 @@
  *
  * [] Creation Date : 21-12-2014
  *
- * [] Last Modified : Fri 09 Jan 2015 06:48:03 PM IRST
+ * [] Last Modified : Sat 10 Jan 2015 03:35:37 PM IRST
  *
  * [] Created By : Parham Alvani (parham.alvani@gmail.com)
  * =======================================
@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+#include "common.h"
 #include "FAT.h"
 #include "fs.h"
 #include "io.h"
@@ -161,17 +162,19 @@ struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size)
 
 	*dir_size = 0;
 	struct fat_dir_layout *entries = NULL;
-	fat_addr_t cluster = first_cluster(dir);
-
-	int index = 0;
 	int nr = 1;
+	fat_addr_t cluster = first_cluster(dir);
 
 	while (cluster) {
 		entries = realloc(entries, SECTOR * fat_boot.sectors_per_cluster * nr);
+		if (!entries)
+			sdie("MEMORY RUNNING OUT\n");
+		
+		fprintf(stderr, "at cluster %u size: %d\n", cluster, *dir_size);
+
 		lseek(fd, cluster_to_sector(cluster), SEEK_SET);
-		read(fd, entries + index, SECTOR * fat_boot.sectors_per_cluster);
+		read(fd, entries + *dir_size, SECTOR * fat_boot.sectors_per_cluster);
 		*dir_size += (SECTOR * fat_boot.sectors_per_cluster) / sizeof(struct fat_dir_layout);
-		index += SECTOR * fat_boot.sectors_per_cluster;
 		nr++;
 		cluster = next_cluster(cluster);
 	}
