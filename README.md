@@ -13,8 +13,8 @@ In this project we using kernel-coding style from Linus Torvalds and using some 
 Some TFAT features include:  
 1. FAT type detection  
 2. Support FAT16 & FAT32  
-3. Delete & Undelete  
-4. ls & cd & dumo ... commands  
+3. Delete & Un-delete  
+4. ls & cd & dump ... commands  
 &...
 
 #Contribution
