@@ -1,24 +1,24 @@
 /*
- * In The Name Of God
- * ========================================
- * [] File Name : FAT.c
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
  *
- * [] Creation Date : 21-12-2014
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * [] Last Modified : Thu 01 Jan 2015 07:55:52 PM IRST
- *
- * [] Created By : Parham Alvani (parham.alvani@gmail.com)
- * =======================================
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
 */
 #include "FAT.h"
 #include "FAT32.h"
 #include "common.h"
 
-#include <time.h>
-#include <ctype.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <memory.h>
 
 
@@ -58,8 +58,8 @@ void init_fat_32(int fd)
 	*/
 	if (fat_boot.table_count > 2)
 		lseek(fd, (fat_boot.table_count - 2) *
-				SECTOR *
-				fat_boot_32.table_size_32, SEEK_CUR);
+		          SECTOR *
+		          fat_boot_32.table_size_32, SEEK_CUR);
 
 	data_offset = lseek(fd, 0, SEEK_CUR);
 
@@ -73,9 +73,9 @@ void init_fat_32(int fd)
 	root_dir = malloc(SECTOR * fat_boot.sectors_per_cluster);
 	while (cluster) {
 		lseek(fd, (cluster - 2) * fat_boot.sectors_per_cluster *
-				SECTOR, SEEK_CUR);
+		          SECTOR, SEEK_CUR);
 		read(fd, root_dir + index, SECTOR *
-				fat_boot.sectors_per_cluster);
+		                           fat_boot.sectors_per_cluster);
 		fat_boot.root_entry_count +=
 			(SECTOR * fat_boot.sectors_per_cluster) /
 			sizeof(struct fat_dir_layout);
@@ -94,7 +94,7 @@ void free_fat_32(void)
 off_t cluster_to_sector_32(fat_addr_t cluster)
 {
 	return SECTOR * fat_boot.sectors_per_cluster *
-		(cluster - 2) + data_offset;
+	       (cluster - 2) + data_offset;
 }
 
 fat_addr_t first_cluster_32(struct fat_dir_layout dir)
@@ -162,9 +162,9 @@ void write_fat_32(int fd)
 
 	while (cluster) {
 		lseek(fd, (cluster - 2) * fat_boot.sectors_per_cluster *
-				SECTOR, SEEK_CUR);
+		          SECTOR, SEEK_CUR);
 		write(fd, root_dir + index, SECTOR *
-				fat_boot.sectors_per_cluster);
+		                            fat_boot.sectors_per_cluster);
 		fat_boot.root_entry_count +=
 			(SECTOR * fat_boot.sectors_per_cluster) /
 			sizeof(struct fat_dir_layout);

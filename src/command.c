@@ -1,14 +1,17 @@
 /*
- * In The Name Of God
- * ========================================
- * [] File Name : command.c
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
  *
- * [] Creation Date : 21-12-2014
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * [] Last Modified : Thu 08 Jan 2015 06:00:36 PM IRST
- *
- * [] Created By : Parham Alvani (parham.alvani@gmail.com)
- * =======================================
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -120,74 +123,74 @@ void test_command(uint32_t cluster)
 void show_command(char c)
 {
 	switch (c) {
-	case 'w':
-		printf("TFAT is a simple interactive fat parser\n");
+		case 'w':
+			printf("TFAT is a simple interactive fat parser\n");
 
-		printf("Copyright (C) 2014 ");
-		printf("Parham Alvani(parham.alvani@gmail.com)\n");
+	                printf("Copyright (C) 2014 ");
+	                printf("Parham Alvani(parham.alvani@gmail.com)\n");
 
-		printf("This program is free software: ");
-		printf("you can redistribute it and/or modify\n");
+	                printf("This program is free software: ");
+	                printf("you can redistribute it and/or modify\n");
 
-		printf("it under the terms of the ");
-		printf("GNU General Public License as published by\n");
+	                printf("it under the terms of the ");
+	                printf("GNU General Public License as published by\n");
 
-		printf("the Free Software Foundation, ");
-		printf("either version 3 of the License, or\n");
+	                printf("the Free Software Foundation, ");
+	                printf("either version 3 of the License, or\n");
 
-		printf("(at your option) any later version.\n");
+	                printf("(at your option) any later version.\n");
 
-		printf("This program is distributed in the hope");
-		printf(" that it will be useful,\n");
+	                printf("This program is distributed in the hope");
+	                printf(" that it will be useful,\n");
 
-		printf("but WITHOUT ANY WARRANTY; ");
-		printf("without even the implied warranty of\n");
+	                printf("but WITHOUT ANY WARRANTY; ");
+	                printf("without even the implied warranty of\n");
 
-		printf("MERCHANTABILITY or FITNESS FOR A ");
-		printf("PARTICULAR PURPOSE.  See the\n");
+	                printf("MERCHANTABILITY or FITNESS FOR A ");
+	                printf("PARTICULAR PURPOSE.  See the\n");
 
-		printf("GNU General Public License for more details.\n");
+	                printf("GNU General Public License for more details.\n");
 
-		printf("You should have received a copy of the ");
-		printf("GNU General Public License\n");
+	                printf("You should have received a copy of the ");
+	                printf("GNU General Public License\n");
 
-		printf("along with this program.  ");
-		printf("If not, see <http://www.gnu.org/licenses/>.\n");
-		break;
-	case 'c':
-		printf("TFAT is a simple interactive fat parser\n");
+	                printf("along with this program.  ");
+	                printf("If not, see <http://www.gnu.org/licenses/>.\n");
+	                break;
+		case 'c':
+			printf("TFAT is a simple interactive fat parser\n");
 
-		printf("Copyright (C) 2014 ");
-		printf("Parham Alvani(parham.alvani@gmail.com)\n");
+	                printf("Copyright (C) 2014 ");
+	                printf("Parham Alvani(parham.alvani@gmail.com)\n");
 
-		printf("This program is free software: ");
-		printf("you can redistribute it and/or modify\n");
+	                printf("This program is free software: ");
+	                printf("you can redistribute it and/or modify\n");
 
-		printf("it under the terms of the ");
-		printf("GNU General Public License as published by\n");
+	                printf("it under the terms of the ");
+	                printf("GNU General Public License as published by\n");
 
-		printf("the Free Software Foundation, ");
-		printf("either version 3 of the License, or\n");
+	                printf("the Free Software Foundation, ");
+	                printf("either version 3 of the License, or\n");
 
-		printf("(at your option) any later version.\n");
+	                printf("(at your option) any later version.\n");
 
-		printf("This program is distributed in the hope");
-		printf(" that it will be useful,\n");
+	                printf("This program is distributed in the hope");
+	                printf(" that it will be useful,\n");
 
-		printf("but WITHOUT ANY WARRANTY; ");
-		printf("without even the implied warranty of\n");
+	                printf("but WITHOUT ANY WARRANTY; ");
+	                printf("without even the implied warranty of\n");
 
-		printf("MERCHANTABILITY or FITNESS FOR A ");
-		printf("PARTICULAR PURPOSE.  See the\n");
+	                printf("MERCHANTABILITY or FITNESS FOR A ");
+	                printf("PARTICULAR PURPOSE.  See the\n");
 
-		printf("GNU General Public License for more details.\n");
+	                printf("GNU General Public License for more details.\n");
 
-		printf("You should have received a copy of the ");
-		printf("GNU General Public License\n");
+	                printf("You should have received a copy of the ");
+	                printf("GNU General Public License\n");
 
-		printf("along with this program.  ");
-		printf("If not, see <http://www.gnu.org/licenses/>.\n");
-		break;
+	                printf("along with this program.  ");
+	                printf("If not, see <http://www.gnu.org/licenses/>.\n");
+	                break;
 	}
 }
 
@@ -295,7 +298,7 @@ void command_dispatcher(const char *command)
 			return;
 		}
 		hdump_command(dir);
-	}  else if (!strcmp(verb, "delete")) {
+	} else if (!strcmp(verb, "delete")) {
 		char dir[MAX_BUFF];
 		int len;
 
@@ -330,7 +333,7 @@ void command_dispatcher(const char *command)
 		show_command(c);
 	} else if (!strcmp(verb, "test_fat")) {
 		test_fat_command();
-	} else if(!strcmp(verb, "test")) {
+	} else if (!strcmp(verb, "test")) {
 		uint32_t index;
 		int len;
 

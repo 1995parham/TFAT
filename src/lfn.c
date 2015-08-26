@@ -1,13 +1,25 @@
+/*
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+*/
 #include <stdio.h>
 #include <memory.h>
 #include <stdlib.h>
-#include <string.h>
 #include <limits.h>
-#include <time.h>
 
 #include "common.h"
 #include "lfn.h"
-#include "FAT.h"
 
 
 /*
@@ -30,34 +42,36 @@ static unsigned char fat_uni2esc[64] = {
 	'u', 'v', 'w', 'x', 'y', 'z', '+', '-'
 };
 
-/* This defines which unicode chars are directly convertable to ISO-8859-1 */
-#define UNICODE_CONVERTABLE(cl, ch)	(ch == 0 && (cl < 0x80 || cl >= 0xa0))
+/* This defines which unicode chars are directly convert able to ISO-8859-1 */
+#define UNICODE_CONVERTABLE(cl, ch)        (ch == 0 && (cl < 0x80 || cl >= 0xa0))
 
 /* for maxlen param */
-#define UNTIL_0		INT_MAX
+#define UNTIL_0                INT_MAX
 
 /* Convert name part in 'lfn' from unicode to ASCII */
-#define CNV_THIS_PART(lfn)					\
-	do {							\
-		unsigned char __part_uni[CHARS_PER_LFN * 2];	\
-		copy_lfn_part(__part_uni, lfn);			\
-		cnv_unicode(__part_uni, CHARS_PER_LFN, 0);	\
-	} while (0)
+#define CNV_THIS_PART(lfn)                                        \
+        do {                                                        \
+                unsigned char __part_uni[CHARS_PER_LFN * 2];        \
+                copy_lfn_part(__part_uni, lfn);                        \
+                cnv_unicode(__part_uni, CHARS_PER_LFN, 0);        \
+        } while (0)
 
 /* Convert name parts collected so far (from previous slots) from unicode to
- * ASCII */
-#define CNV_PARTS_SO_FAR()					\
-	cnv_unicode(lfn_unicode +				\
-			(lfn_slot*CHARS_PER_LFN*2),		\
-			lfn_parts*CHARS_PER_LFN, 0)		\
+ * ASCII
+*/
+#define CNV_PARTS_SO_FAR()                                        \
+        cnv_unicode(lfn_unicode +                                \
+                        (lfn_slot*CHARS_PER_LFN*2),                \
+                        lfn_parts*CHARS_PER_LFN, 0)                \
 
 /* Concat two characters to form a wide character*/
-#define BYTES_TO_WCHAR(ch1, ch2)				\
-	((wchar_t)((unsigned)(ch1) + ((unsigned)(ch2) << 8)))	\
+#define BYTES_TO_WCHAR(ch1, ch2)                                \
+        ((wchar_t)((unsigned)(ch1) + ((unsigned)(ch2) << 8)))        \
+
 
 /*
- * This is a helper function for calculate number of multibyte characters
- * that wide character needed when converted to multibyte form.
+ * This is a helper function for calculate number of multi-byte characters
+ * that wide character needed when converted to multi-byte form.
 */
 static size_t mbslen(wchar_t x)
 {
@@ -89,7 +103,7 @@ static char *cnv_unicode(const unsigned char *uni, int maxlen, int use_q)
 	size_t x;
 
 	for (len = 0, up = uni; (up - uni) / 2 < maxlen && (up[0] || up[1]);
-			up += 2) {
+	     up += 2) {
 		if (mbslen(BYTES_TO_WCHAR(up[0], up[1])) != (size_t) -1) {
 			x = mbslen(BYTES_TO_WCHAR(up[0], up[1]));
 			len += x;
@@ -102,9 +116,9 @@ static char *cnv_unicode(const unsigned char *uni, int maxlen, int use_q)
 	cp = out = malloc(len + 1);
 
 	for (up = uni; (up - uni) / 2 < maxlen && (up[0] || up[1]); up += 2) {
-		if (wctombs((char *)cp, BYTES_TO_WCHAR(up[0], up[1])) !=
-				(size_t) -1) {
-			x = wctombs((char *)cp, BYTES_TO_WCHAR(up[0], up[1]));
+		if (wctombs((char *) cp, BYTES_TO_WCHAR(up[0], up[1])) !=
+		    (size_t) -1) {
+			x = wctombs((char *) cp, BYTES_TO_WCHAR(up[0], up[1]));
 			cp += x;
 		} else if (UNICODE_CONVERTABLE(up[0], up[1])) {
 			*cp++ = up[0];
@@ -125,7 +139,7 @@ static char *cnv_unicode(const unsigned char *uni, int maxlen, int use_q)
 	}
 	*cp = 0;
 
-	return (char *)out;
+	return (char *) out;
 }
 
 /*
@@ -206,7 +220,7 @@ char *lfn_get(const struct fat_dir_layout *de, int *lfn_offset)
 	lfn = cnv_unicode(lfn_unicode, UNTIL_0, 1);
 	lfn_reset();
 	return lfn;
-error:
+	error:
 	lfn_reset();
 	return NULL;
 }

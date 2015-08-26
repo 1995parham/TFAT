@@ -1,14 +1,17 @@
 /*
- * In The Name Of God
- * ========================================
- * [] File Name : FAT.h
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
  *
- * [] Creation Date : 21-12-2014
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * [] Last Modified : Thu 01 Jan 2015 07:54:27 PM IRST
- *
- * [] Created By : Parham Alvani (parham.alvani@gmail.com)
- * =======================================
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
 */
 #ifndef FAT16_H
 #define FAT16_H
@@ -20,17 +23,17 @@
 #include <sys/types.h>
 
 struct fat_extBS_16 {
-	uint8_t		drive_number;
-	uint8_t		reserved;
-	uint8_t		boot_signature;
-	uint32_t	volume_id;
-	uint8_t		volume_label[11];
-	uint8_t		fat_type_label[8];
-	uint8_t		boot_code[448];
-	uint16_t	bootable_partition;
+	uint8_t drive_number;
+	uint8_t reserved;
+	uint8_t boot_signature;
+	uint32_t volume_id;
+	uint8_t volume_label[11];
+	uint8_t fat_type_label[8];
+	uint8_t boot_code[448];
+	uint16_t bootable_partition;
 } __attribute__((packed));
 
-/* Public structs and vars */
+/* Public struct and vars */
 
 extern struct fat_extBS_16 fat_boot_16;
 
@@ -80,6 +83,7 @@ void change_cluster_16(fat_addr_t index, fat_addr_t new_value);
  * int fat table
 */
 fat_addr_t get_cluster_16(fat_addr_t index);
+
 fat_addr_t get_cluster_bak_16(fat_addr_t index);
 
 

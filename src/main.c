@@ -1,20 +1,23 @@
 /*
- * In The Name Of God
- * ========================================
- * [] File Name : main.c
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
  *
- * [] Creation Date : 21-12-2014
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * [] Last Modified : Wed 31 Dec 2014 12:54:34 AM IRST
- *
- * [] Created By : Parham Alvani (parham.alvani@gmail.com)
- * =======================================
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
 */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -25,7 +28,9 @@
 
 int main(int argc, char *argv[])
 {
-	printf("TFAT version 01, Copyright (C) 2015 Parham Alvani(parham.alvani@gmail.com)\n");
+	printf("TFAT version 01\n");
+	printf("Copyright (C) 2015 Parham Alvani(parham.alvani@gmail.com)\n");
+	printf("Copyright (C) 2015 Elahe Jalalpour(el.jalalpour@gmail.com)\n");
 	printf("TFAT comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n");
 	printf("This is free software, and you are welcome to redistribute it\n");
 	printf("under certain conditions; type `show c' for details.\n");
@@ -38,7 +43,8 @@ int main(int argc, char *argv[])
 	change_label("NOTHING");
 
 	while (true) {
-		sprintf(prompt, "%s@TFAT {%s} [%s] $ ", getlogin(), label, current_path);
+		sprintf(prompt, "%s@TFAT {%s} [%s] $ ", getlogin(), label,
+			current_path);
 		command = readline(prompt);
 		if (command && *command)
 			add_history(command);

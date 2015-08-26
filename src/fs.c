@@ -1,22 +1,22 @@
 /*
- * In The Name Of God
- * ========================================
- * [] File Name : fs.c
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
  *
- * [] Creation Date : 21-12-2014
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * [] Last Modified : Sat 10 Jan 2015 04:37:42 PM IRST
- *
- * [] Created By : Parham Alvani (parham.alvani@gmail.com)
- * =======================================
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
 */
 #include <string.h>
 #include <malloc.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
 
-#include "common.h"
 #include "FAT.h"
 #include "fs.h"
 #include "io.h"
@@ -28,7 +28,8 @@ void init_fs(int dev)
 	fd = dev;
 }
 
-struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char *term, int size)
+struct fat_dir_layout *search(const struct fat_dir_layout *root_dir,
+	const char *term, int size)
 {
 	int i = 0;
 
@@ -36,7 +37,7 @@ struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char 
 		if (root_dir[i].file_size && !is_special(root_dir[i].attr)) {
 			char dis_name[255];
 			char *temp = get_name(root_dir[i].name,
-					root_dir[i].case_information);
+				root_dir[i].case_information);
 
 			if (temp) {
 				strcpy(dis_name, temp);
@@ -47,7 +48,7 @@ struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char 
 			dis_name[strlen(dis_name) + 1] = 0;
 			dis_name[strlen(dis_name)] = '.';
 			temp = get_extention(root_dir[i].extention,
-					root_dir[i].case_information);
+				root_dir[i].case_information);
 			strcpy(dis_name + strlen(dis_name), temp);
 			free(temp);
 
@@ -57,7 +58,7 @@ struct fat_dir_layout *search(const struct fat_dir_layout *root_dir, const char 
 		if (is_directory(root_dir[i].attr)) {
 			char dis_name[255];
 			char *temp = get_name(root_dir[i].name,
-					root_dir[i].case_information);
+				root_dir[i].case_information);
 
 			if (temp) {
 				strcpy(dis_name, temp);
@@ -106,7 +107,7 @@ struct fat_dir_layout *find(const char *path)
 	}
 	free(str);
 	return file;
-error:
+	error:
 	free(str);
 	free(file);
 	if (dir != root_dir && dir)
@@ -166,10 +167,13 @@ struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size)
 	fat_addr_t cluster = first_cluster(dir);
 
 	while (cluster) {
-		entries = realloc(entries, SECTOR * fat_boot.sectors_per_cluster * nr);
+		entries = realloc(entries,
+			SECTOR * fat_boot.sectors_per_cluster * nr);
 		lseek(fd, cluster_to_sector(cluster), SEEK_SET);
-		read(fd, entries + *dir_size, SECTOR * fat_boot.sectors_per_cluster);
-		*dir_size += (SECTOR * fat_boot.sectors_per_cluster) / sizeof(struct fat_dir_layout);
+		read(fd, entries + *dir_size,
+			SECTOR * fat_boot.sectors_per_cluster);
+		*dir_size += (SECTOR * fat_boot.sectors_per_cluster) /
+		             sizeof(struct fat_dir_layout);
 		nr++;
 		cluster = next_cluster(cluster);
 	}
@@ -177,7 +181,8 @@ struct fat_dir_layout *parse_dir(struct fat_dir_layout dir, int *dir_size)
 	return entries;
 }
 
-void write_dir(struct fat_dir_layout dir, const struct fat_dir_layout *entries, int dir_size)
+void write_dir(struct fat_dir_layout dir, const struct fat_dir_layout *entries,
+	int dir_size)
 {
 	if (!is_directory(dir.attr))
 		return;
@@ -187,8 +192,10 @@ void write_dir(struct fat_dir_layout dir, const struct fat_dir_layout *entries, 
 
 	while (cluster) {
 		lseek(fd, cluster_to_sector(cluster), SEEK_SET);
-		write(fd, entries + index, SECTOR * fat_boot.sectors_per_cluster);
-		dir_size -= (SECTOR * fat_boot.sectors_per_cluster) / sizeof(struct fat_dir_layout);
+		write(fd, entries + index,
+			SECTOR * fat_boot.sectors_per_cluster);
+		dir_size -= (SECTOR * fat_boot.sectors_per_cluster) /
+		            sizeof(struct fat_dir_layout);
 		index += SECTOR * fat_boot.sectors_per_cluster;
 		cluster = next_cluster(cluster);
 	}

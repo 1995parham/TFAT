@@ -1,15 +1,19 @@
 /*
- * In The Name Of God
- * ========================================
- * [] File Name : user.c
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
  *
- * [] Creation Date : 21-12-2014
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * [] Last Modified : Sat 10 Jan 2015 03:49:55 PM IRST
- *
- * [] Created By : Parham Alvani (parham.alvani@gmail.com)
- * =======================================
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
 */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -66,30 +70,30 @@ void info(void)
 		printf("FAT32\n");
 
 	printf("Boot Jump: %2X %2X %2X\n",
-			fat_boot.bootjmp[0],
-			fat_boot.bootjmp[1],
-			fat_boot.bootjmp[2]);
+		fat_boot.bootjmp[0],
+		fat_boot.bootjmp[1],
+		fat_boot.bootjmp[2]);
 
 	printf("OEM Media: %8s\n",
-			fat_boot.oem_name);
+		fat_boot.oem_name);
 
 	printf("Media Type: %2X\n",
-			fat_boot.media_type);
+		fat_boot.media_type);
 
 	printf("Bytes Per Sector: %hu\n",
-			fat_boot.bytes_per_sector);
+		fat_boot.bytes_per_sector);
 
 	printf("Sectors Per Track: %hu\n",
-			fat_boot.sectors_per_track);
+		fat_boot.sectors_per_track);
 
 	printf("Sectors Per Cluster: %hu\n",
-			fat_boot.sectors_per_cluster);
+		fat_boot.sectors_per_cluster);
 
 	printf("Reserved Sectors: %hu\n",
-			fat_boot.reserved_sector_count);
+		fat_boot.reserved_sector_count);
 
 	printf("FAT Tables: %hhu\n",
-			fat_boot.table_count);
+		fat_boot.table_count);
 
 	printf("Table Size: %u\n", table_size());
 
@@ -122,14 +126,15 @@ static void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 			continue;
 		if (!is_deleted(root_dir[i].name) && is_lfn(root_dir[i].attr))
 			lfn_add_slot(&root_dir[i], i);
-		if (!is_directory(root_dir[i].attr) && !is_special(root_dir[i].attr)) {
+		if (!is_directory(root_dir[i].attr) &&
+		    !is_special(root_dir[i].attr)) {
 			char dis_name[255];
 			char dis_time[255];
 			char dis_attr[255];
 			char dis_full_name[1024] = "";
 
 			char *temp = get_name(root_dir[i].name,
-					root_dir[i].case_information);
+				root_dir[i].case_information);
 
 			if (temp) {
 				strcpy(dis_name, temp);
@@ -140,7 +145,7 @@ static void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 			dis_name[strlen(dis_name) + 1] = 0;
 			dis_name[strlen(dis_name)] = '.';
 			temp = get_extention(root_dir[i].extention,
-					root_dir[i].case_information);
+				root_dir[i].case_information);
 			strcpy(dis_name + strlen(dis_name), temp);
 			free(temp);
 			temp = get_attr(root_dir[i].attr);
@@ -155,12 +160,13 @@ static void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 				free(temp);
 			}
 
-			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
+			struct tm file_tm = create_time(root_dir[i].create_time,
+				root_dir[i].create_date);
 
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
-			printf("%s %s %4u %12s %4hX %s\n", dis_attr, dis_time
-					, root_dir[i].file_size, dis_name,
-					first_cluster(root_dir[i]), dis_full_name);
+			printf("%s %s %4u %12s %4hX %s\n", dis_attr, dis_time,
+				root_dir[i].file_size, dis_name,
+				first_cluster(root_dir[i]), dis_full_name);
 		}
 		if (is_directory(root_dir[i].attr)) {
 			char dis_name[255];
@@ -169,7 +175,7 @@ static void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 			char dis_full_name[1024] = "";
 
 			char *temp = get_name(root_dir[i].name,
-					root_dir[i].case_information);
+				root_dir[i].case_information);
 
 			if (temp) {
 				strcpy(dis_name, temp);
@@ -190,12 +196,13 @@ static void list(struct fat_dir_layout *root_dir, int size, int show_deleted)
 			}
 
 
-			struct tm file_tm = create_time(root_dir[i].create_time, root_dir[i].create_date);
+			struct tm file_tm = create_time(root_dir[i].create_time,
+				root_dir[i].create_date);
 
 			strftime(dis_time, 255, "%b %d %T %Y", &file_tm);
 			printf("%s %s ---- %12s %4hX %s\n", dis_attr,
-					dis_time, dis_name,
-					first_cluster(root_dir[i]), dis_full_name);
+				dis_time, dis_name,
+				first_cluster(root_dir[i]), dis_full_name);
 		}
 	}
 }
@@ -295,9 +302,9 @@ void cd(const char *path)
 		}
 		if (!is_directory(dir->attr)) {
 			printf("%s is Not Directory\n", npath);
-		free(npath);
-		free(dir);
-		return;
+			free(npath);
+			free(dir);
+			return;
 		}
 		change_current_path(npath);
 
@@ -383,7 +390,7 @@ void hdump(const char *dir)
 			read(fd, buff, SECTOR * fat_boot.sectors_per_cluster);
 
 			for (j = 0; j < SECTOR *
-					fat_boot.sectors_per_cluster; j++)
+			                fat_boot.sectors_per_cluster; j++)
 				printf("%02X ", buff[j]);
 			size -= SECTOR * fat_boot.sectors_per_cluster;
 		}
@@ -432,7 +439,7 @@ void dump(const char *dir)
 			read(fd, buff, SECTOR * fat_boot.sectors_per_cluster);
 
 			for (j = 0; j < SECTOR *
-					fat_boot.sectors_per_cluster; j++)
+			                fat_boot.sectors_per_cluster; j++)
 				printf("%c", buff[j]);
 			size -= SECTOR * fat_boot.sectors_per_cluster;
 		}
@@ -502,7 +509,7 @@ void test_fat(void)
 	for (i = 0; i < table_size(); i++)
 		if (get_cluster(i) != get_cluster_bak(i))
 			printf("We have error on entry %u, %X != %X", i,
-					get_cluster(i), get_cluster_bak(i));
+				get_cluster(i), get_cluster_bak(i));
 }
 
 void delete(const char *dir)

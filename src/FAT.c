@@ -1,26 +1,26 @@
 /*
- * In The Name Of God
- * ========================================
- * [] File Name : FAT.c
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
  *
- * [] Creation Date : 21-12-2014
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * [] Last Modified : Thu 01 Jan 2015 07:51:31 PM IRST
- *
- * [] Created By : Parham Alvani (parham.alvani@gmail.com)
- * =======================================
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
 */
 #include "FAT.h"
 #include "common.h"
 #include "FAT16.h"
 #include "FAT32.h"
 
-#include <time.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <memory.h>
 
 
 struct fat_BS fat_boot;
@@ -160,7 +160,7 @@ char *get_label(void)
  * 0x05: The first character of filename is actually 0xe5
 */
 char *get_name(const uint8_t name[],
-		uint8_t case_information)
+	uint8_t case_information)
 {
 	if (name[0] == 0x00)
 		return NULL;
@@ -183,7 +183,7 @@ char *get_name(const uint8_t name[],
 }
 
 char *get_extention(const uint8_t extention[],
-		uint8_t case_information)
+	uint8_t case_information)
 {
 	char *ret_extention = malloc(4 * sizeof(char));
 	int lower = case_information & 0x10;
@@ -191,7 +191,7 @@ char *get_extention(const uint8_t extention[],
 
 	for (i = 0; i < 3; i++)
 		ret_extention[i] = (lower) ?
-			tolower(extention[i]) : extention[i];
+		                   tolower(extention[i]) : extention[i];
 	ret_extention[3] = 0;
 	return rtrim(ret_extention);
 }
@@ -241,7 +241,7 @@ struct tm create_time(const uint16_t create_time, const uint16_t create_date)
 	/*
 	 * 0b0000000111100000 = 0x1E0
 	*/
-	file_tm.tm_mon  = ((create_date & 0x1E0) >> 5) - 1;
+	file_tm.tm_mon = ((create_date & 0x1E0) >> 5) - 1;
 
 	/*
 	 * 0b0000000000011111 = 0x1F
@@ -256,12 +256,12 @@ struct tm create_time(const uint16_t create_time, const uint16_t create_date)
 	/*
 	 * 0b0000011111100000 = 0x7E0
 	*/
-	file_tm.tm_min  = (create_time & 0x7E0) >> 5;
+	file_tm.tm_min = (create_time & 0x7E0) >> 5;
 
 	/*
 	 * 0b0000000000011111 = 0x1F
 	*/
-	file_tm.tm_sec  = (create_time & 0x1F) * 2;
+	file_tm.tm_sec = (create_time & 0x1F) * 2;
 	return file_tm;
 }
 

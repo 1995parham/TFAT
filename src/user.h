@@ -1,31 +1,35 @@
 /*
- * In The Name Of God
- * ========================================
- * [] File Name : user.h
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
  *
- * [] Creation Date : 21-12-2014
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * [] Last Modified : Thu 08 Jan 2015 05:57:58 PM IRST
- *
- * [] Created By : Parham Alvani (parham.alvani@gmail.com)
- * =======================================
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
 */
+
 #ifndef USER_H
 #define USER_H
 
 #include "FAT.h"
 
-#define TEST_FD()						\
-	do {							\
-		if (fd <= 0)					\
-			udie("Please open valid device first");	\
-	} while (0)						\
+#define TEST_FD()                                                \
+        do {                                                        \
+                if (fd <= 0)                                        \
+                        udie("Please open valid device first");        \
+        } while (0)                                                \
 
-#define TEST_W_FD()							\
-	do {								\
-		if (!(fcntl(fd, F_GETFL) & O_RDWR))			\
-			udie("Please open device with write permission");\
-	} while (0)							\
+#define TEST_W_FD()                                                        \
+        do {                                                                \
+                if (!(fcntl(fd, F_GETFL) & O_RDWR))                        \
+                        udie("Please open device with write permission");\
+        } while (0)                                                        \
 
 
 void mount(const char *dev, int wflag);

@@ -1,24 +1,24 @@
 /*
- * In The Name Of God
- * ========================================
- * [] File Name : FAT.c
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
  *
- * [] Creation Date : 21-12-2014
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * [] Last Modified : Thu 01 Jan 2015 07:56:31 PM IRST
- *
- * [] Created By : Parham Alvani (parham.alvani@gmail.com)
- * =======================================
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
 */
 #include "FAT.h"
 #include "FAT16.h"
 #include "common.h"
 
-#include <time.h>
-#include <ctype.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <fcntl.h>
 #include <memory.h>
 
 
@@ -57,12 +57,12 @@ void init_fat_16(int fd)
 	*/
 	if (fat_boot.table_count > 2)
 		lseek(fd, (fat_boot.table_count - 2) *
-				SECTOR *
-				fat_boot.table_size_16, SEEK_CUR);
+		          SECTOR *
+		          fat_boot.table_size_16, SEEK_CUR);
 	root_dir = malloc(sizeof(struct fat_dir_layout) *
-			fat_boot.root_entry_count);
+	                  fat_boot.root_entry_count);
 	read(fd, root_dir, fat_boot.root_entry_count *
-			sizeof(struct fat_dir_layout));
+	                   sizeof(struct fat_dir_layout));
 
 	data_offset = lseek(fd, 0, SEEK_CUR);
 }
@@ -76,7 +76,7 @@ void free_fat_16(void)
 off_t cluster_to_sector_16(fat_addr_t cluster)
 {
 	return SECTOR * fat_boot.sectors_per_cluster *
-		(cluster - 2) + data_offset;
+	       (cluster - 2) + data_offset;
 }
 
 fat_addr_t first_cluster_16(struct fat_dir_layout dir)
@@ -142,5 +142,5 @@ void write_fat_16(int fd)
 		write(fd, fat_table, fat_boot.table_size_16 * SECTOR);
 
 	write(fd, root_dir, fat_boot.root_entry_count *
-			sizeof(struct fat_dir_layout));
+	                    sizeof(struct fat_dir_layout));
 }

@@ -1,14 +1,17 @@
 /*
- * In The Name Of God
- * ========================================
- * [] File Name : FAT.h
+ *  TFAT, Fat parser and cli
+ *  Copyright (C) 2015  Parham Alvani (parham.alvani@gmail.com)
+ *  Copyright (C) 2015  Elahe Jalalpour (el.jalalpour@gmail.com)
  *
- * [] Creation Date : 21-12-2014
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * [] Last Modified : Thu 01 Jan 2015 07:52:53 PM IRST
- *
- * [] Created By : Parham Alvani (parham.alvani@gmail.com)
- * =======================================
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
 */
 #ifndef FAT32_H
 #define FAT32_H
@@ -42,31 +45,32 @@
  * be assumed to be in valid format.)
 */
 struct fat_info_32 {
-	uint32_t	signature_0;
-	uint8_t		reserved_0[480]; /* Why ??? */
-	uint32_t	signature_1;
-	uint32_t	free_clusters;
-	uint32_t	recently_alloc_clusters;
-	uint8_t		reserved_1[12];
-	uint32_t	signature_2;
+	uint32_t signature_0;
+	uint8_t reserved_0[480];
+	/* Why ??? */
+	uint32_t signature_1;
+	uint32_t free_clusters;
+	uint32_t recently_alloc_clusters;
+	uint8_t reserved_1[12];
+	uint32_t signature_2;
 } __attribute__((packed));
 
 struct fat_extBS_32 {
-	uint32_t	table_size_32;
-	uint16_t	extended_flags;
-	uint16_t	fat_version;
-	uint32_t	root_cluster;
-	uint16_t	fat_info;
-	uint16_t	backup_BS_sector;
-	uint8_t		reserved_0[12];
-	uint8_t		drive_number;
-	uint8_t		reserved_1;
-	uint8_t		boot_signature;
-	uint32_t	volume_id;
-	uint8_t		volume_label[11];
-	uint8_t		fat_type_label[8];
-	uint8_t		boot_code[420];
-	uint16_t	bootable_partition;
+	uint32_t table_size_32;
+	uint16_t extended_flags;
+	uint16_t fat_version;
+	uint32_t root_cluster;
+	uint16_t fat_info;
+	uint16_t backup_BS_sector;
+	uint8_t reserved_0[12];
+	uint8_t drive_number;
+	uint8_t reserved_1;
+	uint8_t boot_signature;
+	uint32_t volume_id;
+	uint8_t volume_label[11];
+	uint8_t fat_type_label[8];
+	uint8_t boot_code[420];
+	uint16_t bootable_partition;
 } __attribute__((packed));
 
 /* Public structs and vars */
@@ -121,6 +125,7 @@ void change_cluster_32(fat_addr_t index, fat_addr_t new_value);
  * int fat table
 */
 fat_addr_t get_cluster_32(fat_addr_t index);
+
 fat_addr_t get_cluster_bak_32(fat_addr_t index);
 
 /*
