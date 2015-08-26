@@ -1,31 +1,16 @@
-cmake_minimum_required(VERSION 3.2)
-project(TFAT)
+cmake_minimum_required (VERSION 2.6)
+project (TFAT)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+# Set porject imformation
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 
-set(SOURCE_FILES
-    src/cd.c
-    src/cd.h
-    src/command.c
-    src/command.h
-    src/common.c
-    src/common.h
-    src/FAT.c
-    src/FAT.h
-    src/FAT16.c
-    src/FAT16.h
-    src/FAT32.c
-    src/FAT32.h
-    src/fs.c
-    src/fs.h
-    src/io.c
-    src/io.h
-    src/label.c
-    src/label.h
-    src/lfn.c
-    src/lfn.h
-    src/main.c
-    src/user.c
-    src/user.h)
+subdirs (src)
 
-add_executable(TFAT ${SOURCE_FILES})
+# The version number
+set (RBP_MAJOR_VERSION 1)
+set (RBP_MINOR_VERSION 1)
+
+# Add personal c flags
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O0 -g -std=gnu11 ")

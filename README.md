@@ -23,12 +23,9 @@ If you have bug or idea about this project send me an [email](mailto:parham.alva
 
 #Dependencies
 1. GNU readline
-2. GNU histroy  
+2. GNU history  
 both project available at [GNU READLINE HOMEPAGE](http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html)
 
 #Installation
-After compiling GNU readline copy libreadline.a & libhistory.a into src folder and execute following command:
-
-	$ make
 
 

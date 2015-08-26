@@ -8,7 +8,7 @@ TODO List
 - [x] Adding long file name support
 - [x] Adding remove command.
 - [x] Adding flushing disk command.
-- [x] Adding undelete command.
+- [x] Adding un-delete command.
 - [ ] Writing test unit.
 - [ ] Improve delete command.
 - [ ] Improve LFN support.
