@@ -74,7 +74,7 @@ extern int FATN;
 /* Functions */
 
 /*
- * Buid and initiate
+ * Build and initiate
  * fat_boot,
  * fat_table,
  * fat_table_bak,
@@ -149,8 +149,8 @@ char *get_name(const uint8_t name[],
  * Get extention in null-terminated string
  * we use case information like above
 */
-char *get_extention(const uint8_t extention[],
-		uint8_t case_information);
+char *get_extension(const uint8_t *const extension,
+	uint8_t case_information);
 
 /*
  * Get attributes in string with following

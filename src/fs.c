@@ -47,7 +47,7 @@ struct fat_dir_layout *search(const struct fat_dir_layout *root_dir,
 			}
 			dis_name[strlen(dis_name) + 1] = 0;
 			dis_name[strlen(dis_name)] = '.';
-			temp = get_extention(root_dir[i].extention,
+			temp = get_extension(root_dir[i].extention,
 				root_dir[i].case_information);
 			strcpy(dis_name + strlen(dis_name), temp);
 			free(temp);

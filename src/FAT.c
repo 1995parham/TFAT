@@ -155,7 +155,7 @@ char *get_label(void)
 
 /*
  * name[0] =
- * 0x00: Filenaem never used
+ * 0x00: Filename never used
  * 0xE5: The filename has been used, but the file has been deleted
  * 0x05: The first character of filename is actually 0xe5
 */
@@ -182,7 +182,7 @@ char *get_name(const uint8_t name[],
 	return rtrim(ret_name);
 }
 
-char *get_extention(const uint8_t extention[],
+char *get_extension(const uint8_t *const extension,
 	uint8_t case_information)
 {
 	char *ret_extention = malloc(4 * sizeof(char));
@@ -191,7 +191,7 @@ char *get_extention(const uint8_t extention[],
 
 	for (i = 0; i < 3; i++)
 		ret_extention[i] = (lower) ?
-		                   tolower(extention[i]) : extention[i];
+		                   tolower(extension[i]) : extension[i];
 	ret_extention[3] = 0;
 	return rtrim(ret_extention);
 }
