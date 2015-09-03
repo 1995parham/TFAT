@@ -37,3 +37,14 @@ both project available at
 $ cmake .
 $ make
 ```
+
+## References
+For FAT structure details and our references implementation
+please see following links:
+
+- [A tutorial on the FAT file system](http://www.tavi.co.uk/phobos/fat.html)
+- [FAT](http://wiki.osdev.org/FAT)
+- [Design of the FAT file system](http://en.wikipedia.org/wiki/Design_of_the_FAT_file_system)
+- [FAT Utilities](https://gitorious.org/unix-stuff/fat-util)
+- [Grasso - a FAT filesystem parser written in Python](https://github.com/em-/grasso)
+- [Un-Deletion](http://en.wikipedia.org/wiki/Undeletion)
