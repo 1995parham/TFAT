@@ -18,8 +18,9 @@ Some TFAT features include:
 &...
 
 ## Contribution
-For todo list see doc/TODlist.md  
-If you have bug or idea about this project send us a pull request.
+If you have an idea or find a bug feel free to fork TFAT and
+send us a pull request and you can see [here](doc/TODOlist.md)
+for TFAT TODO list.
 
 ## Contributors
 * [Parham Alvani](https://1995parham.github.io)
