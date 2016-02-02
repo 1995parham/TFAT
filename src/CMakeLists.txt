@@ -13,8 +13,7 @@
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
-add_executable(TFAT.out cd.c command.c common.c FAT.c FAT16.c FAT32.c fs.c io.c
+add_executable(TFAT.out cd.c command.c common.c FAT.c FAT16.c FAT32.c fs.c io.c /
         label.c lfn.c main.c user.c)
-find_library(readline readline)
-message("Gnu Readline library was found")
+
 target_link_libraries(TFAT.out readline)
