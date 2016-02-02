@@ -24,7 +24,6 @@ for TFAT TODO list.
 
 ## Contributors
 * [Parham Alvani](https://1995parham.github.io)
-* [Elahe Jalalpour](http://ceit.aut.ac.ir/~jalalpour)
 
 ## Dependencies
 1. GNU readline
@@ -34,7 +33,8 @@ both project available at
 
 ## Installation
 ```
-$ cmake .
+$ mkdir build; cd build
+$ cmake ../
 $ make
 ```
 
