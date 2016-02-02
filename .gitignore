@@ -80,3 +80,9 @@ crashlytics.properties
 crashlytics-build.properties
 
 
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Makefile
+cmake_install.cmake
+install_manifest.txt
