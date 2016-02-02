@@ -33,8 +33,12 @@ both project available at
 
 ## Installation
 ```
+<<<<<<< HEAD
 $ mkdir build; cd build
 $ cmake ../
+=======
+$ cmake .
+>>>>>>> cb65326418c8199016ecf0fc8c552b660835a899
 $ make
 ```
 
