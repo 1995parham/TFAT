@@ -32,10 +32,10 @@ both project available at
 [GNU READLINE HOMEPAGE](http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html)
 
 ## Installation
-```
-$ mkdir build; cd build
-$ cmake ../
-$ make
+```shell
+mkdir build; cd build
+cmake ../
+make
 ```
 
 ## References
