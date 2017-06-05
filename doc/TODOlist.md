@@ -1,4 +1,4 @@
-#TODO List
+# TODO List
 
 - [x] Adding change directory command.
 - [x] Adding path parser.
